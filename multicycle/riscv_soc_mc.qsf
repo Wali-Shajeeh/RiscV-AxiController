@@ -1,0 +1,21 @@
+# -------------------------------------------------------------------------- #
+# Quartus Prime Project Settings for RISC-V Multicycle AXI SoC
+# -------------------------------------------------------------------------- #
+
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CGXFC7C7F23C8
+set_global_assignment -name TOP_LEVEL_ENTITY riscv_soc_mc
+set_global_assignment -name SYSTEMVERILOG_FILE riscv_soc_mc.sv
+set_global_assignment -name SYSTEMVERILOG_FILE controller_fsm.sv
+set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE alu_control.sv
+set_global_assignment -name SYSTEMVERILOG_FILE pc_reg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE reg_file.sv
+set_global_assignment -name SYSTEMVERILOG_FILE imm_gen.sv
+set_global_assignment -name SYSTEMVERILOG_FILE instr_mem.sv
+set_global_assignment -name SYSTEMVERILOG_FILE data_mem.sv
+set_global_assignment -name SYSTEMVERILOG_FILE axi_adapter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE axi_interconnect.sv
+set_global_assignment -name SYSTEMVERILOG_FILE pwm_peripheral.sv
+
+set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"

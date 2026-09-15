@@ -1,0 +1,108 @@
+# vsim -c -do "vcd file wave.vcd; vcd add -r /tb_riscv_soc_mc/*; run -all; quit -f" work.tb_riscv_soc_mc 
+# Start time: 11:46:33 on Sep 09,2026
+# Loading sv_std.std
+# Loading work.tb_riscv_soc_mc
+# Loading work.riscv_soc_mc
+# Loading work.pc_reg
+# Loading work.instr_mem
+# Loading work.reg_file
+# Loading work.imm_gen
+# Loading work.alu_control
+# Loading work.alu
+# Loading work.data_mem
+# Loading work.controller_fsm
+# Loading work.axi_adapter
+# Loading work.axi_interconnect
+# Loading work.pwm_peripheral
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'u_axi_interconnect'.  Expected 87, found 36.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_riscv_soc_mc/dut/u_axi_interconnect File: riscv_soc_mc.sv Line: 354
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_awaddr'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_awvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_awready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_wdata'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_wstrb'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_wvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_wready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_bresp'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_bvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_bready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_araddr'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_arvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_arready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_rdata'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_rresp'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_rvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'timer_rready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_awaddr'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_awvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_awready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_wdata'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_wstrb'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_wvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_wready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_bresp'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_bvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_bready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_araddr'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_arvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_arready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_rdata'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_rresp'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_rvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'gpio_rready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_awaddr'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_awvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_awready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_wdata'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_wstrb'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_wvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_wready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_bresp'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_bvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_bready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_araddr'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_arvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_arready'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_rdata'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_rresp'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_rvalid'.
+# ** Warning: (vsim-3722) riscv_soc_mc.sv(354): [TFMPC] - Missing connection for port 'uart_rready'.
+# vcd file wave.vcd
+#  vcd add -r /tb_riscv_soc_mc/*
+#  run -all
+# ==============================================
+#   Multicycle AXI SoC — PWM Peripheral Test
+# ==============================================
+# [INFO] Simulation started, waiting for CPU to configure PWM...
+# Time=135000 | PC=0000000c | WRITE ADDR=40000004 DATA=00000064 is_periph=1 mem_ready=0
+# Time=145000 | PC=0000000c | WRITE ADDR=40000004 DATA=00000064 is_periph=1 mem_ready=0
+# Time=145000 | AXI Adapter State=1
+# Time=155000 | PC=0000000c | WRITE ADDR=40000004 DATA=00000064 is_periph=1 mem_ready=0
+# Time=155000 | AXI Adapter State=2
+# Time=165000 | PC=0000000c | WRITE ADDR=40000004 DATA=00000064 is_periph=1 mem_ready=1
+# Time=165000 | AXI Adapter State=3
+# Time=245000 | PC=00000014 | WRITE ADDR=40000008 DATA=00000019 is_periph=1 mem_ready=0
+# Time=255000 | PC=00000014 | WRITE ADDR=40000008 DATA=00000019 is_periph=1 mem_ready=0
+# Time=255000 | AXI Adapter State=1
+# Time=265000 | PC=00000014 | WRITE ADDR=40000008 DATA=00000019 is_periph=1 mem_ready=0
+# Time=265000 | AXI Adapter State=2
+# Time=275000 | PC=00000014 | WRITE ADDR=40000008 DATA=00000019 is_periph=1 mem_ready=1
+# Time=275000 | AXI Adapter State=3
+# Time=355000 | PC=0000001c | WRITE ADDR=40000000 DATA=00000001 is_periph=1 mem_ready=0
+# Time=365000 | PC=0000001c | WRITE ADDR=40000000 DATA=00000001 is_periph=1 mem_ready=0
+# Time=365000 | AXI Adapter State=1
+# Time=375000 | PC=0000001c | WRITE ADDR=40000000 DATA=00000001 is_periph=1 mem_ready=0
+# Time=375000 | AXI Adapter State=2
+# Time=385000 | PC=0000001c | WRITE ADDR=40000000 DATA=00000001 is_periph=1 mem_ready=1
+# Time=385000 | AXI Adapter State=3
+# [INFO] PWM should be active now. Monitoring pwm_out...
+# [PASS] 1385000: pwm_out went HIGH
+# [PASS] 1635000: pwm_out went LOW
+# [PASS] 2395000: pwm_out went HIGH (1 period complete)
+# ==============================================
+#   >>> TEST PASSED <<<
+# ==============================================
+# ** Note: $finish    : tb_riscv_soc_mc.sv(50)
+#    Time: 2495 ns  Iteration: 0  Instance: /tb_riscv_soc_mc
+# End time: 11:46:34 on Sep 09,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 52

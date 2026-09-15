@@ -1,0 +1,27 @@
+Quartus Prime Archive log --	C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.qarlog
+
+Archive:	C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.qar
+Date:		Wed Sep 09 11:23:47 2026
+Quartus Prime		20.1.1 Build 720 11/11/2020 SJ Lite Edition
+
+	=========== Files Selected: ===========
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/alu.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/alu_control.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_adapter.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_interconnect.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/controller_fsm.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/data_mem.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/hex_file.hex
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/imm_gen.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/instr_mem.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/pc_reg.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/pwm_peripheral.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/reg_file.sv
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.qpf
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.qsf
+C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv
+c:/intelfpga_lite/20.1/quartus/bin64/assignment_defaults.qdf
+	======= Total: 16 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.

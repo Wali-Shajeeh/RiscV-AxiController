@@ -1,0 +1,2 @@
+Info (10281): Verilog HDL Declaration information at axi_adapter.sv(5): object "write_data" differs only in case from object "WRITE_DATA" in the same scope File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_adapter.sv Line: 5
+Info (10281): Verilog HDL Declaration information at axi_adapter.sv(8): object "read_data" differs only in case from object "READ_DATA" in the same scope File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_adapter.sv Line: 8

@@ -1,0 +1,278 @@
+Analysis & Elaboration report for riscv_soc_mc
+Wed Sep 09 11:23:45 2026
+Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Elaboration Summary
+  3. Parallel Compilation
+  4. Analysis & Elaboration Settings
+  5. Port Connectivity Checks: "axi_interconnect:u_axi_interconnect"
+  6. Analysis & Elaboration Messages
+  7. Analysis & Elaboration Suppressed Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2020  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++-----------------------------------------------------------------------------+
+; Analysis & Elaboration Summary                                              ;
++-------------------------------+---------------------------------------------+
+; Analysis & Elaboration Status ; Successful - Wed Sep 09 11:23:45 2026       ;
+; Quartus Prime Version         ; 20.1.1 Build 720 11/11/2020 SJ Lite Edition ;
+; Revision Name                 ; riscv_soc_mc                                ;
+; Top-level Entity Name         ; riscv_soc_mc                                ;
+; Family                        ; Cyclone V                                   ;
+; Logic utilization (in ALMs)   ; N/A until Partition Merge                   ;
+; Total registers               ; N/A until Partition Merge                   ;
+; Total pins                    ; N/A until Partition Merge                   ;
+; Total virtual pins            ; N/A until Partition Merge                   ;
+; Total block memory bits       ; N/A until Partition Merge                   ;
+; Total PLLs                    ; N/A until Partition Merge                   ;
+; Total DLLs                    ; N/A until Partition Merge                   ;
++-------------------------------+---------------------------------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 8           ;
+; Maximum allowed            ; 4           ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
++----------------------------+-------------+
+
+
++---------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Elaboration Settings                                                                                           ;
++---------------------------------------------------------------------------------+--------------------+--------------------+
+; Option                                                                          ; Setting            ; Default Value      ;
++---------------------------------------------------------------------------------+--------------------+--------------------+
+; Device                                                                          ; 5CGXFC7C7F23C8     ;                    ;
+; Top-level entity name                                                           ; riscv_soc_mc       ; riscv_soc_mc       ;
+; Family name                                                                     ; Cyclone V          ; Cyclone V          ;
+; Use smart compilation                                                           ; Off                ; Off                ;
+; Enable parallel Assembler and Timing Analyzer during compilation                ; On                 ; On                 ;
+; Enable compact report table                                                     ; Off                ; Off                ;
+; Restructure Multiplexers                                                        ; Auto               ; Auto               ;
+; MLAB Add Timing Constraints For Mixed-Port Feed-Through Mode Setting Don't Care ; Off                ; Off                ;
+; Create Debugging Nodes for IP Cores                                             ; Off                ; Off                ;
+; Preserve fewer node names                                                       ; On                 ; On                 ;
+; Intel FPGA IP Evaluation Mode                                                   ; Enable             ; Enable             ;
+; Verilog Version                                                                 ; Verilog_2001       ; Verilog_2001       ;
+; VHDL Version                                                                    ; VHDL_1993          ; VHDL_1993          ;
+; State Machine Processing                                                        ; Auto               ; Auto               ;
+; Safe State Machine                                                              ; Off                ; Off                ;
+; Extract Verilog State Machines                                                  ; On                 ; On                 ;
+; Extract VHDL State Machines                                                     ; On                 ; On                 ;
+; Ignore Verilog initial constructs                                               ; Off                ; Off                ;
+; Iteration limit for constant Verilog loops                                      ; 5000               ; 5000               ;
+; Iteration limit for non-constant Verilog loops                                  ; 250                ; 250                ;
+; Add Pass-Through Logic to Inferred RAMs                                         ; On                 ; On                 ;
+; Infer RAMs from Raw Logic                                                       ; On                 ; On                 ;
+; Parallel Synthesis                                                              ; On                 ; On                 ;
+; DSP Block Balancing                                                             ; Auto               ; Auto               ;
+; NOT Gate Push-Back                                                              ; On                 ; On                 ;
+; Power-Up Don't Care                                                             ; On                 ; On                 ;
+; Remove Redundant Logic Cells                                                    ; Off                ; Off                ;
+; Remove Duplicate Registers                                                      ; On                 ; On                 ;
+; Ignore CARRY Buffers                                                            ; Off                ; Off                ;
+; Ignore CASCADE Buffers                                                          ; Off                ; Off                ;
+; Ignore GLOBAL Buffers                                                           ; Off                ; Off                ;
+; Ignore ROW GLOBAL Buffers                                                       ; Off                ; Off                ;
+; Ignore LCELL Buffers                                                            ; Off                ; Off                ;
+; Ignore SOFT Buffers                                                             ; On                 ; On                 ;
+; Limit AHDL Integers to 32 Bits                                                  ; Off                ; Off                ;
+; Optimization Technique                                                          ; Balanced           ; Balanced           ;
+; Carry Chain Length                                                              ; 70                 ; 70                 ;
+; Auto Carry Chains                                                               ; On                 ; On                 ;
+; Auto Open-Drain Pins                                                            ; On                 ; On                 ;
+; Perform WYSIWYG Primitive Resynthesis                                           ; Off                ; Off                ;
+; Auto ROM Replacement                                                            ; On                 ; On                 ;
+; Auto RAM Replacement                                                            ; On                 ; On                 ;
+; Auto DSP Block Replacement                                                      ; On                 ; On                 ;
+; Auto Shift Register Replacement                                                 ; Auto               ; Auto               ;
+; Allow Shift Register Merging across Hierarchies                                 ; Auto               ; Auto               ;
+; Auto Clock Enable Replacement                                                   ; On                 ; On                 ;
+; Strict RAM Replacement                                                          ; Off                ; Off                ;
+; Allow Synchronous Control Signals                                               ; On                 ; On                 ;
+; Force Use of Synchronous Clear Signals                                          ; Off                ; Off                ;
+; Auto Resource Sharing                                                           ; Off                ; Off                ;
+; Allow Any RAM Size For Recognition                                              ; Off                ; Off                ;
+; Allow Any ROM Size For Recognition                                              ; Off                ; Off                ;
+; Allow Any Shift Register Size For Recognition                                   ; Off                ; Off                ;
+; Use LogicLock Constraints during Resource Balancing                             ; On                 ; On                 ;
+; Ignore translate_off and synthesis_off directives                               ; Off                ; Off                ;
+; Timing-Driven Synthesis                                                         ; On                 ; On                 ;
+; Report Parameter Settings                                                       ; On                 ; On                 ;
+; Report Source Assignments                                                       ; On                 ; On                 ;
+; Report Connectivity Checks                                                      ; On                 ; On                 ;
+; Ignore Maximum Fan-Out Assignments                                              ; Off                ; Off                ;
+; Synchronization Register Chain Length                                           ; 3                  ; 3                  ;
+; Power Optimization During Synthesis                                             ; Normal compilation ; Normal compilation ;
+; HDL message level                                                               ; Level2             ; Level2             ;
+; Suppress Register Optimization Related Messages                                 ; Off                ; Off                ;
+; Number of Removed Registers Reported in Synthesis Report                        ; 5000               ; 5000               ;
+; Number of Swept Nodes Reported in Synthesis Report                              ; 5000               ; 5000               ;
+; Number of Inverted Registers Reported in Synthesis Report                       ; 100                ; 100                ;
+; Clock MUX Protection                                                            ; On                 ; On                 ;
+; Auto Gated Clock Conversion                                                     ; Off                ; Off                ;
+; Block Design Naming                                                             ; Auto               ; Auto               ;
+; SDC constraint protection                                                       ; Off                ; Off                ;
+; Synthesis Effort                                                                ; Auto               ; Auto               ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal                    ; On                 ; On                 ;
+; Pre-Mapping Resynthesis Optimization                                            ; Off                ; Off                ;
+; Analysis & Synthesis Message Level                                              ; Medium             ; Medium             ;
+; Disable Register Merging Across Hierarchies                                     ; Auto               ; Auto               ;
+; Resource Aware Inference For Block RAM                                          ; On                 ; On                 ;
+; Automatic Parallel Synthesis                                                    ; On                 ; On                 ;
+; Partial Reconfiguration Bitstream ID                                            ; Off                ; Off                ;
++---------------------------------------------------------------------------------+--------------------+--------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "axi_interconnect:u_axi_interconnect"                                                                                                                  ;
++---------------+--------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
+; Port          ; Type   ; Severity ; Details                                                                                                                                      ;
++---------------+--------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
+; timer_awaddr  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_awvalid ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_awready ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_wdata   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_wstrb   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_wvalid  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_wready  ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_bresp   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_bvalid  ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_bready  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_araddr  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_arvalid ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; timer_arready ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_rdata   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_rresp   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_rvalid  ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; timer_rready  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_awaddr   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_awvalid  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_awready  ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_wdata    ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_wstrb    ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_wvalid   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_wready   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_bresp    ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_bvalid   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_bready   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_araddr   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_arvalid  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; gpio_arready  ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_rdata    ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_rresp    ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_rvalid   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; gpio_rready   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_awaddr   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_awvalid  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_awready  ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_wdata    ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_wstrb    ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_wvalid   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_wready   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_bresp    ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_bvalid   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_bready   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_araddr   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_arvalid  ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
+; uart_arready  ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_rdata    ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_rresp    ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_rvalid   ; Input  ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
+; uart_rready   ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed.                                     ;
++---------------+--------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
+
+
++---------------------------------+
+; Analysis & Elaboration Messages ;
++---------------------------------+
+Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
+Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
+Info (12021): Found 1 design units, including 1 entities, in source file riscv_soc_mc.sv
+    Info (12023): Found entity 1: riscv_soc_mc File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 14
+Info (12021): Found 1 design units, including 1 entities, in source file controller_fsm.sv
+    Info (12023): Found entity 1: controller_fsm File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/controller_fsm.sv Line: 13
+Info (12021): Found 1 design units, including 1 entities, in source file alu.sv
+    Info (12023): Found entity 1: alu File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/alu.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file alu_control.sv
+    Info (12023): Found entity 1: alu_control File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/alu_control.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file pc_reg.sv
+    Info (12023): Found entity 1: pc_reg File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/pc_reg.sv Line: 6
+Info (12021): Found 1 design units, including 1 entities, in source file reg_file.sv
+    Info (12023): Found entity 1: reg_file File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/reg_file.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file imm_gen.sv
+    Info (12023): Found entity 1: imm_gen File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/imm_gen.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file instr_mem.sv
+    Info (12023): Found entity 1: instr_mem File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/instr_mem.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file data_mem.sv
+    Info (12023): Found entity 1: data_mem File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/data_mem.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file axi_adapter.sv
+    Info (12023): Found entity 1: axi_adapter File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_adapter.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file axi_interconnect.sv
+    Info (12023): Found entity 1: axi_interconnect File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_interconnect.sv Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file pwm_peripheral.sv
+    Info (12023): Found entity 1: pwm_peripheral File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/pwm_peripheral.sv Line: 1
+Info (12127): Elaborating entity "riscv_soc_mc" for the top level hierarchy
+Info (12128): Elaborating entity "pc_reg" for hierarchy "pc_reg:u_pc_reg" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 109
+Info (12128): Elaborating entity "instr_mem" for hierarchy "instr_mem:u_instr_mem" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 119
+Warning (10850): Verilog HDL warning at instr_mem.sv(11): number of words (24) in memory file does not match the number of elements in the address range [0:1023] File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/instr_mem.sv Line: 11
+Warning (10030): Net "mem.data_a" at instr_mem.sv(8) has no driver or initial value, using a default initial value '0' File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/instr_mem.sv Line: 8
+Warning (10030): Net "mem.waddr_a" at instr_mem.sv(8) has no driver or initial value, using a default initial value '0' File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/instr_mem.sv Line: 8
+Warning (10030): Net "mem.we_a" at instr_mem.sv(8) has no driver or initial value, using a default initial value '0' File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/instr_mem.sv Line: 8
+Info (12128): Elaborating entity "reg_file" for hierarchy "reg_file:u_reg_file" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 151
+Info (12128): Elaborating entity "imm_gen" for hierarchy "imm_gen:u_imm_gen" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 175
+Info (12128): Elaborating entity "alu_control" for hierarchy "alu_control:u_alu_control" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 186
+Info (12128): Elaborating entity "alu" for hierarchy "alu:u_alu" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 222
+Info (12128): Elaborating entity "data_mem" for hierarchy "data_mem:u_data_mem" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 248
+Info (12128): Elaborating entity "controller_fsm" for hierarchy "controller_fsm:u_controller" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 317
+Info (12128): Elaborating entity "axi_adapter" for hierarchy "axi_adapter:u_axi_adapter" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 349
+Info (12128): Elaborating entity "axi_interconnect" for hierarchy "axi_interconnect:u_axi_interconnect" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 392
+Info (10264): Verilog HDL Case Statement information at axi_interconnect.sv(137): all case item expressions in this case statement are onehot File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_interconnect.sv Line: 137
+Info (10264): Verilog HDL Case Statement information at axi_interconnect.sv(165): all case item expressions in this case statement are onehot File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_interconnect.sv Line: 165
+Info (10264): Verilog HDL Case Statement information at axi_interconnect.sv(183): all case item expressions in this case statement are onehot File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_interconnect.sv Line: 183
+Info (10264): Verilog HDL Case Statement information at axi_interconnect.sv(221): all case item expressions in this case statement are onehot File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_interconnect.sv Line: 221
+Info (10264): Verilog HDL Case Statement information at axi_interconnect.sv(239): all case item expressions in this case statement are onehot File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/axi_interconnect.sv Line: 239
+Info (12128): Elaborating entity "pwm_peripheral" for hierarchy "pwm_peripheral:u_pwm_peripheral" File: C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.sv Line: 418
+Warning (12241): 1 hierarchies have connectivity warnings - see the Connectivity Checks report folder
+Info (144001): Generated suppressed messages file C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.map.smsg
+
+
++--------------------------------------------+
+; Analysis & Elaboration Suppressed Messages ;
++--------------------------------------------+
+The suppressed messages can be found in C:/D_drive/Digital_Systems/DV/capstone/multicycle_axi_soc/riscv_soc_mc.map.smsg.
+
+

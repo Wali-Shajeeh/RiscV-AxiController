@@ -1,0 +1,18 @@
+// Test program for multicycle RV32I core + AXI4-Lite PWM Peripheral
+// Base address for PWM is 0x4000_0000
+// 0x00: lui x9, 0x40000        -> 400004B7 (x9 = 0x40000000)
+// 0x04: addi x10, x0, 100      -> 06400513 (x10 = 100)
+// 0x08: sw x10, 4(x9)          -> 00A4A223 (mem[0x40000004] = 100) -> Set Period
+// 0x0C: addi x11, x0, 25       -> 01900593 (x11 = 25)
+// 0x10: sw x11, 8(x9)          -> 00B4A423 (mem[0x40000008] = 25)  -> Set Duty
+// 0x14: addi x12, x0, 1        -> 00100613 (x12 = 1)
+// 0x18: sw x12, 0(x9)          -> 00C4A023 (mem[0x40000000] = 1)   -> Enable PWM
+// 0x1C: jal x0, 0              -> 0000006F (infinite loop)
+400004B7
+06400513
+00A4A223
+01900593
+00B4A423
+00100613
+00C4A023
+0000006F
