@@ -1,0 +1,72 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2026 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+Licensing (25.02-p001) initialized with server/s 5280@CadenceSERVER at [09-09-2026 12:08:19.100609]
+
+
+Version: 26.10-p002_1, built Tue Jun 16 04:05:44 PDT 2026
+Options: -files genus_script.tcl 
+Date:    Wed Sep 09 12:08:25 2026
+Host:    CadenceSoftware (x86_64 w/Linux 5.14.0-687.26.1.el9_8.x86_64) (2cores*4cpus*2physical cpus*Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz 12288KB) (16077760KB)
+PID:     7839
+OS:      Rocky Linux 9.8 (Blue Onyx)
+
+Checking out license: Genus_Synthesis
+License checkout complete (0 seconds elapsed).
+Using CFE kit 26.10-s031_1, version 3239472, compiled for GBI
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Finished executable startup (6 seconds elapsed).
+
+Loading tool scripts...
+Finished loading tool scripts (20 seconds elapsed).
+
+#@ Processing -files option
+@genus:root: 1> source genus_script.tcl
+File 'genus_script.tcl' does not exist.
+Encountered problems processing file: genus_script.tcl
+@genus:root: 2> source synthesis/genus_script.tcl
+Sourcing './synthesis/genus_script.tcl' (Wed Sep 09 12:09:01 PKT 2026)...
+#@ Begin verbose source ./synthesis/genus_script.tcl
+@file(genus_script.tcl) 1: set_db init_lib_search_path ../lib/
+  Setting attribute of root '/': 'init_lib_search_path' = ../lib/
+@file(genus_script.tcl) 2: set_db init_hdl_search_path ../rtl/
+  Setting attribute of root '/': 'init_hdl_search_path' = ../rtl/
+@file(genus_script.tcl) 3: read_libs slow_vdd1v0_basicCells.lib
+Error   : File error. [FILE-100] [::legacy::set_attribute]
+        : Cannot open file 'slow_vdd1v0_basicCells.lib'
+        : Make sure that the file is a readable regular file and has the specified name.
+Error   : A library file does not exist. [LBR-68] [::legacy::set_attribute]
+        : File 'slow_vdd1v0_basicCells.lib' could not be found. File '<none>' was the last file that was successfully read in.
+        : Make sure that the library file exists or check for a typo in the file name.
+Error   : The data value for this attribute is invalid. [TUI-24] [::legacy::set_attribute]
+        : The value '  { slow_vdd1v0_basicCells.lib } ' cannot be set for attribute 'library'.
+        : To see the usage/description for this attribute, type '::legacy::set_attribute -h <attr_name> *' (in legacy UI mode) or 'help * <attr_name> -detail' (in CUI mode).
+#@ End verbose source ./synthesis/genus_script.tcl
+1
+@genus:root: 3> source synthesis/genus_script.tcl
+Sourcing './synthesis/genus_script.tcl' (Wed Sep 09 12:10:59 PKT 2026)...
+#@ Begin verbose source ./synthesis/genus_script.tcl
+@file(genus_script.tcl) 1: set_db init_lib_search_path ../lib/
+  Setting attribute of root '/': 'init_lib_search_path' = ../lib/
+@file(genus_script.tcl) 2: set_db init_hdl_search_path ../rtl/
+  Setting attribute of root '/': 'init_hdl_search_path' = ../rtl/
+@file(genus_script.tcl) 3: read_libs slow_vdd1v0_basicCells.lib
+Error   : File error. [FILE-100] [::legacy::set_attribute]
+        : Cannot open file 'slow_vdd1v0_basicCells.lib'
+Error   : A library file does not exist. [LBR-68] [::legacy::set_attribute]
+        : File 'slow_vdd1v0_basicCells.lib' could not be found. File '<none>' was the last file that was successfully read in.
+Error   : The data value for this attribute is invalid. [TUI-24] [::legacy::set_attribute]
+        : The value '  { slow_vdd1v0_basicCells.lib } ' cannot be set for attribute 'library'.
+#@ End verbose source ./synthesis/genus_script.tcl
+1
+@genus:root: 4> exit
+
+Normal exit.

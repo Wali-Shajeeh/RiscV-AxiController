@@ -1,0 +1,76 @@
+                          CONFORMAL (R)
+                   Version 26.10-s200 (09-Jul-2026) (64 bit executable)
+   Copyright (c) Cadence Design Systems, Inc., 1997-2026. All Rights Reserved
+
+
+This program is proprietary and confidential information belonging to
+Cadence Design Systems, Inc., and may be used and disclosed only as authorized
+in a license agreement controlling such use and disclosure.
+
+CPU time     : 0.14    seconds
+Elapse time  : 0       seconds
+Memory usage : 136.05  M bytes
+// Command: read library ../lib/slow_vdd1v0_basicCells.lib -liberty -both
+// Parsing file ../lib/slow_vdd1v0_basicCells.lib ...
+// Warning: (RTL9.17) Cell doesn't have any output pins or all output pins are undriven (blackboxed) (occurrence:1)
+// Note: (RTL9.26) Liberty pin with internal_node use default input_map (occurrence:16)
+// Note: Read Liberty library successfully
+CPU time     : 0.26    seconds
+Elapse time  : 1       seconds
+Memory usage : 157.76  M bytes
+// Command: read library ../lib/ram_256x16A_fast_syn.lib -liberty -both -append
+// Parsing file ../lib/ram_256x16A_fast_syn.lib ...
+// Warning: (RTL9.17) Cell doesn't have any output pins or all output pins are undriven (blackboxed) (occurrence:2)
+// Note: (RTL9.26) Liberty pin with internal_node use default input_map (occurrence:16)
+// Note: Read Liberty library successfully
+// Command: read design ../rtl/*.sv -sv -golden
+// Parsing file ../rtl/alu.sv ...
+// Parsing file ../rtl/alu_control.sv ...
+// Parsing file ../rtl/axi_adapter.sv ...
+// Parsing file ../rtl/axi_interconnect.sv ...
+// Parsing file ../rtl/data_mem.sv ...
+// Parsing file ../rtl/decoder.sv ...
+// Parsing file ../rtl/imm_gen.sv ...
+// Parsing file ../rtl/instr_mem.sv ...
+// Parsing file ../rtl/pc_control.sv ...
+// Parsing file ../rtl/pc_reg.sv ...
+// Parsing file ../rtl/pwm_peripheral.sv ...
+// Parsing file ../rtl/reg_file.sv ...
+// Parsing file ../rtl/timer_peripheral.sv ...
+// Parsing file ../rtl/updated_top_module2.sv ...
+// Golden root module is set to 'updated_top_module2'
+// Warning: (RTL1.5b) Potential loss of RHS msb or carry-out bit (occurrence:7)
+// Warning: (RTL2.13) Undriven pin is detected (occurrence:82)
+// Note: (RTL5.5a) Default case item with non-X assignment(s) (occurrence:23)
+// Note: (RTL5.7) Default case item with inconsistent assignment(s). (occurrence:7)
+// Warning: (RTL6.4a) Enum value might need constraint (occurrence:2)
+// Warning: (RTL14) Signal has input but it has no output (occurrence:33)
+// Warning: (HRC3.5a) Open input/inout port connection is detected (occurrence:1)
+// Note: (HRC3.5b) Open output port connection is detected (occurrence:1)
+// Warning: (HRC3.10a) An input port is declared, but it is not completely used in the module (occurrence:60)
+// Warning: Total black box modules referenced in Golden = 1
+// Warning: There are 82 undriven pins in Golden
+// Note: Read VERILOG design successfully
+// Command: set root module updated_top_module2 -golden
+// Warning: Golden root module is already at 'updated_top_module2'
+// Command: add black box ram_256x16A
+// Warning: 'ram_256x16A' in Golden is already specified as a black box
+// Command: read design ../synthesis/outputs/updated_top_module2_netlist.v -verilog -revised
+// Parsing file ../synthesis/outputs/updated_top_module2_netlist.v ...
+// Revised root module is set to 'updated_top_module2'
+// Warning: (RTL2.5) Net is referenced without an assignment. Design verification will be based on set_undriven_signal setting (occurrence:508)
+// Warning: (RTL2.13) Undriven pin is detected (occurrence:721)
+// Warning: (RTL14) Signal has input but it has no output (occurrence:753)
+// Warning: (HRC3.10a) An input port is declared, but it is not completely used in the module (occurrence:541)
+// Warning: Total black box modules referenced in Revised = 1
+// Warning: There are 721 undriven nets in Revised
+// Warning: There are 721 undriven pins in Revised
+// Note: Read VERILOG design successfully
+// Command: set root module updated_top_module2 -revised
+// Warning: Revised root module is already at 'updated_top_module2'
+// Command: set undriven signal 0 -golden
+// Command: set undriven signal 0 -revised
+// Command: set mapping method -name_mapping
+// Error: Unknown option '-name_mapping'
+// 'dofile /home/PD15/capstone/Lec/capstone.do' is aborted at line 23
+// Command: exit
