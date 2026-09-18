@@ -459,6 +459,7 @@ vsim -view vsim.wlf
 
 - **Wali Shajeeh**
 - **Mufeez Rasheed Khan**
+- **Muhammad Areeb**
 
 ---
 
