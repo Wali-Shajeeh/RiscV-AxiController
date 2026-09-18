@@ -1,0 +1,183 @@
+# vsim -c -do "log -r /*; run -all; quit -f" work.tb_top 
+# Start time: 14:58:10 on Sep 18,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# Support of the MGLS_LICENSE_FILE and LM_LICENSE_FILE licensing environment variables will be discontinued starting with the 2025.1 release. Please update to using the SALT_LICENSE_SERVER variable.
+# Please contact Siemens EDA Customer Support (https://support.sw.siemens.com/) for assistance.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2685) [TFMPC] - Too few port connections for 'u_axi_interconnect'.  Expected 87, found 36.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_rready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_rvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_rresp'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_rdata'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_arready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_arvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_araddr'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_bready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_bvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_bresp'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_wready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_wvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_wstrb'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_wdata'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_awready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_awvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'uart_awaddr'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_rready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_rvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_rresp'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_rdata'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_arready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_arvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_araddr'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_bready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_bvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_bresp'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_wready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_wvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_wstrb'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_wdata'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_awready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_awvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'gpio_awaddr'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_rready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_rvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_rresp'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_rdata'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_arready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_arvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_araddr'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_bready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_bvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_bresp'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_wready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_wvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_wstrb'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_wdata'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_awready'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_awvalid'.
+# ** Warning: ..\single_cycle_core_Mufeez_restored\updated_top_module2.sv(218): (vopt-2718) [TFMPC] - Missing connection for port 'timer_awaddr'.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=52.
+# //  Questa Sim-64
+# //  Version 2024.1 win64 Feb  1 2024
+# //
+# // Unpublished work. Copyright 2024 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.tb_soc_layered_sv_unit(fast)
+# Loading work.tb_top(fast)
+# log -r /*
+#  run -all
+# ** Warning: (vsim-7) Failed to open readmem file "hex_file.hex" in read mode.
+# No such file or directory. (errno = ENOENT)    : ../single_cycle_core_Mufeez_restored/instr_mem.sv(11)
+#    Time: 0 ps  Iteration: 0  Instance: /tb_top
+#   [NOTE] AXI stall-latency bug: PC advances 1 cycle before busy asserts.
+#          This causes AXI address to change mid-handshake → deadlock.
+# 
+# ==========================================================
+#   RISC-V SoC — Layered Directed Testbench
+#   DUT: updated_top_module2 (single-cycle + AXI + PWM)
+#   Total Tests: 8
+# ==========================================================
+# 
+# ----------------------------------------------------------
+#   TEST 1: RESET: all registers zero after reset
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: RESET: all registers zero after reset
+#     [PASS] x1 = 0x00000000
+#     [PASS] x2 = 0x00000000
+#     [PASS] x3 = 0x00000000
+#     [PASS] x4 = 0x00000000
+#     [PASS] x5 = 0x00000000
+#     [PASS] x10 = 0x00000000
+#     [PASS] x15 = 0x00000000
+#     [PASS] x31 = 0x00000000
+# 
+# ----------------------------------------------------------
+#   TEST 2: R-TYPE: add, sub, and, or, xor, slt
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: R-TYPE: add, sub, and, or, xor, slt
+#     [PASS] x1 = 0x0000000a
+#     [PASS] x2 = 0x00000003
+#     [PASS] x3 = 0x0000000d
+#     [PASS] x4 = 0x00000007
+#     [PASS] x5 = 0x00000002
+#     [PASS] x6 = 0x0000000b
+#     [PASS] x7 = 0x00000009
+#     [PASS] x8 = 0x00000001
+# 
+# ----------------------------------------------------------
+#   TEST 3: I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli
+#     [PASS] x1 = 0x00000064
+#     [PASS] x2 = 0x00000004
+#     [PASS] x3 = 0x00000067
+#     [PASS] x4 = 0x0000009b
+#     [PASS] x5 = 0x00000001
+#     [PASS] x6 = 0x00000190
+#     [PASS] x7 = 0x0000000c
+# 
+# ----------------------------------------------------------
+#   TEST 4: LOAD/STORE: sw, lw through data memory
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: LOAD/STORE: sw, lw through data memory
+#     [PASS] x1 = 0x0000002a
+#     [PASS] x2 = 0x0000002a
+#     [PASS] x3 = 0x00000032
+#     [PASS] mem[0] = 0x0000002a
+# 
+# ----------------------------------------------------------
+#   TEST 5: BRANCH: beq taken skips one instruction
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: BRANCH: beq taken skips one instruction
+#     [PASS] x1 = 0x00000005
+#     [PASS] x3 = 0x00000000
+#     [PASS] x4 = 0x0000004d
+# 
+# ----------------------------------------------------------
+#   TEST 6: JAL: jump forward, save return address
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: JAL: jump forward, save return address
+#     [PASS] x1 = 0x00000001
+#     [PASS] x2 = 0x00000000
+#     [PASS] x3 = 0x00000021
+#     [PASS] x5 = 0x00000008
+# 
+# ----------------------------------------------------------
+#   TEST 7: AXI WRITE + PWM (known stall-latency bug)
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: AXI WRITE + PWM (known stall-latency bug)
+#     [PASS] x9 = 0x40000000
+#     [PASS] x10 = 0x00000064
+# 
+# ----------------------------------------------------------
+#   TEST 8: ADDRESS DECODE: local mem vs peripheral boundary
+# ----------------------------------------------------------
+#   [CHECKER] Verifying: ADDRESS DECODE: local mem vs peripheral boundary
+#     [PASS] x1 = 0x0000007b
+#     [PASS] x3 = 0x0000007b
+#     [PASS] mem[0] = 0x0000007b
+# 
+# ----------------------------------------------------------
+#   AXI BUS SUMMARY
+# ----------------------------------------------------------
+#     Total AXI Writes completed: 0
+#     Total AXI Reads  completed: 0
+# 
+# ==========================================================
+#   SCOREBOARD:  39 PASSED  |  0 FAILED
+# ==========================================================
+#   >>> ALL TESTS PASSED <<<
+# ==========================================================
+# ** Note: $finish    : tb_soc_layered.sv(463)
+#    Time: 3245 ns  Iteration: 0  Instance: /tb_top
+# End time: 14:58:12 on Sep 18,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 53

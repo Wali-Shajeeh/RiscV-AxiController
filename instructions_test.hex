@@ -1,0 +1,49 @@
+// Test program for multicycle RV32I core
+// 0x00: addi x1, x0, 5             x1 = 5
+// 0x04: addi x2, x0, 10            x2 = 10
+// 0x08: add  x3, x1, x2            x3 = 15
+// 0x0C: sub  x4, x2, x1            x4 = 5
+// 0x10: and  x5, x1, x2            x5 = 0
+// 0x14: or   x6, x1, x2            x6 = 15
+// 0x18: xor  x7, x1, x2            x7 = 15
+// 0x1C: slt  x8, x1, x2            x8 = 1
+// 0x20: addi x9, x0, 100           x9 = 100  (base addr for mem tests)
+// 0x24: sw   x3, 0(x9)             mem[100] = 15
+// 0x28: lw   x10, 0(x9)            x10 = 15
+// 0x2C: addi x11, x0, -1           x11 = 0xFFFFFFFF
+// 0x30: sb   x11, 4(x9)            mem[104] byte0 = 0xFF
+// 0x34: lb   x12, 4(x9)            x12 = sext(0xFF) = -1
+// 0x38: lbu  x13, 4(x9)            x13 = zext(0xFF) = 255
+// 0x3C: lui  x14, 0x12345          x14 = 0x12345000
+// 0x40: auipc x15, 1               x15 = 0x40 + 0x1000 = 0x1040
+// 0x44: beq  x1, x4, +8            skip next (x1=5, x4=5)
+// 0x48: addi x16, x0, 99           SKIPPED
+// 0x4C: addi x17, x0, 42           x17 = 42
+// 0x50: jal  x18, +8               x18 = 0x54, jump to 0x58
+// 0x54: addi x19, x0, 77           SKIPPED
+// 0x58: addi x20, x0, 1            x20 = 1 (DONE marker)
+// 0x5C: jal  x0, 0                 infinite loop
+00500093
+00A00113
+002081B3
+40110233
+0020F2B3
+0020E333
+0020C3B3
+0020A433
+06400493
+0034A023
+0004A503
+FFF00593
+00B48223
+00448603
+0044C683
+12345737
+00001797
+00408463
+06300813
+02A00893
+0080096F
+04D00993
+00100A13
+0000006F
