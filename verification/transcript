@@ -1,5 +1,5 @@
-# vsim -c -do "log -r /*; run -all; quit -f" work.tb_top 
-# Start time: 14:58:10 on Sep 18,2026
+# vsim -c -do "log -r /*; run -all; quit -f" work.top_tb 
+# Start time: 23:34:48 on Sep 23,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # Support of the MGLS_LICENSE_FILE and LM_LICENSE_FILE licensing environment variables will be discontinued starting with the 2025.1 release. Please update to using the SALT_LICENSE_SERVER variable.
 # Please contact Siemens EDA Customer Support (https://support.sw.siemens.com/) for assistance.
@@ -71,18 +71,24 @@
 # // and may not be used in any way not expressly authorized by SISW.
 # //
 # Loading sv_std.std
-# Loading work.tb_soc_layered_sv_unit(fast)
-# Loading work.tb_top(fast)
+# Loading work.top_tb_sv_unit(fast)
+# Loading work.top_tb(fast)
+# Loading work.soc_intf(fast)
 # log -r /*
 #  run -all
-# ** Warning: (vsim-7) Failed to open readmem file "hex_file.hex" in read mode.
-# No such file or directory. (errno = ENOENT)    : ../single_cycle_core_Mufeez_restored/instr_mem.sv(11)
-#    Time: 0 ps  Iteration: 0  Instance: /tb_top
 #   [NOTE] AXI stall-latency bug: PC advances 1 cycle before busy asserts.
-#          This causes AXI address to change mid-handshake → deadlock.
+#          This causes AXI address to change mid-handshake -> deadlock.
+#   [GENERATOR] RESET: all registers zero after reset  |  run_cycles=0  |  regs_to_check=8  |  mem_to_check=0
+#   [GENERATOR] R-TYPE: add, sub, and, or, xor, slt  |  run_cycles=20  |  regs_to_check=8  |  mem_to_check=0
+#   [GENERATOR] I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli  |  run_cycles=20  |  regs_to_check=7  |  mem_to_check=0
+#   [GENERATOR] LOAD/STORE: sw, lw through data memory  |  run_cycles=15  |  regs_to_check=3  |  mem_to_check=1
+#   [GENERATOR] BRANCH: beq taken skips one instruction  |  run_cycles=15  |  regs_to_check=3  |  mem_to_check=0
+#   [GENERATOR] JAL: jump forward, save return address  |  run_cycles=15  |  regs_to_check=4  |  mem_to_check=0
+#   [GENERATOR] AXI WRITE + PWM (known stall-latency bug)  |  run_cycles=200  |  regs_to_check=2  |  mem_to_check=0
+#   [GENERATOR] ADDRESS DECODE: local mem vs peripheral boundary  |  run_cycles=15  |  regs_to_check=2  |  mem_to_check=1
 # 
 # ==========================================================
-#   RISC-V SoC — Layered Directed Testbench
+#   RISC-V SoC — Modular Layered Directed Testbench
 #   DUT: updated_top_module2 (single-cycle + AXI + PWM)
 #   Total Tests: 8
 # ==========================================================
@@ -90,6 +96,13 @@
 # ----------------------------------------------------------
 #   TEST 1: RESET: all registers zero after reset
 # ----------------------------------------------------------
+#   [DRIVER] RESET: all registers zero after reset  |  run_cycles=0  |  regs_to_check=8  |  mem_to_check=0
+# 
+# ----------------------------------------------------------
+#   TEST 2: R-TYPE: add, sub, and, or, xor, slt
+# ----------------------------------------------------------
+#   [DRIVER] R-TYPE: add, sub, and, or, xor, slt  |  run_cycles=20  |  regs_to_check=8  |  mem_to_check=0
+#   [MONITOR] RESET: all registers zero after reset  |  run_cycles=0  |  regs_to_check=8  |  mem_to_check=0
 #   [CHECKER] Verifying: RESET: all registers zero after reset
 #     [PASS] x1 = 0x00000000
 #     [PASS] x2 = 0x00000000
@@ -101,8 +114,10 @@
 #     [PASS] x31 = 0x00000000
 # 
 # ----------------------------------------------------------
-#   TEST 2: R-TYPE: add, sub, and, or, xor, slt
+#   TEST 3: I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli
 # ----------------------------------------------------------
+#   [DRIVER] I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli  |  run_cycles=20  |  regs_to_check=7  |  mem_to_check=0
+#   [MONITOR] R-TYPE: add, sub, and, or, xor, slt  |  run_cycles=20  |  regs_to_check=8  |  mem_to_check=0
 #   [CHECKER] Verifying: R-TYPE: add, sub, and, or, xor, slt
 #     [PASS] x1 = 0x0000000a
 #     [PASS] x2 = 0x00000003
@@ -114,8 +129,10 @@
 #     [PASS] x8 = 0x00000001
 # 
 # ----------------------------------------------------------
-#   TEST 3: I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli
+#   TEST 4: LOAD/STORE: sw, lw through data memory
 # ----------------------------------------------------------
+#   [DRIVER] LOAD/STORE: sw, lw through data memory  |  run_cycles=15  |  regs_to_check=3  |  mem_to_check=1
+#   [MONITOR] I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli  |  run_cycles=20  |  regs_to_check=7  |  mem_to_check=0
 #   [CHECKER] Verifying: I-TYPE ALU: addi, andi, ori, xori, slti, slli, srli
 #     [PASS] x1 = 0x00000064
 #     [PASS] x2 = 0x00000004
@@ -126,8 +143,10 @@
 #     [PASS] x7 = 0x0000000c
 # 
 # ----------------------------------------------------------
-#   TEST 4: LOAD/STORE: sw, lw through data memory
+#   TEST 5: BRANCH: beq taken skips one instruction
 # ----------------------------------------------------------
+#   [DRIVER] BRANCH: beq taken skips one instruction  |  run_cycles=15  |  regs_to_check=3  |  mem_to_check=0
+#   [MONITOR] LOAD/STORE: sw, lw through data memory  |  run_cycles=15  |  regs_to_check=3  |  mem_to_check=1
 #   [CHECKER] Verifying: LOAD/STORE: sw, lw through data memory
 #     [PASS] x1 = 0x0000002a
 #     [PASS] x2 = 0x0000002a
@@ -135,16 +154,20 @@
 #     [PASS] mem[0] = 0x0000002a
 # 
 # ----------------------------------------------------------
-#   TEST 5: BRANCH: beq taken skips one instruction
+#   TEST 6: JAL: jump forward, save return address
 # ----------------------------------------------------------
+#   [DRIVER] JAL: jump forward, save return address  |  run_cycles=15  |  regs_to_check=4  |  mem_to_check=0
+#   [MONITOR] BRANCH: beq taken skips one instruction  |  run_cycles=15  |  regs_to_check=3  |  mem_to_check=0
 #   [CHECKER] Verifying: BRANCH: beq taken skips one instruction
 #     [PASS] x1 = 0x00000005
 #     [PASS] x3 = 0x00000000
 #     [PASS] x4 = 0x0000004d
 # 
 # ----------------------------------------------------------
-#   TEST 6: JAL: jump forward, save return address
+#   TEST 7: AXI WRITE + PWM (known stall-latency bug)
 # ----------------------------------------------------------
+#   [DRIVER] AXI WRITE + PWM (known stall-latency bug)  |  run_cycles=200  |  regs_to_check=2  |  mem_to_check=0
+#   [MONITOR] JAL: jump forward, save return address  |  run_cycles=15  |  regs_to_check=4  |  mem_to_check=0
 #   [CHECKER] Verifying: JAL: jump forward, save return address
 #     [PASS] x1 = 0x00000001
 #     [PASS] x2 = 0x00000000
@@ -152,15 +175,14 @@
 #     [PASS] x5 = 0x00000008
 # 
 # ----------------------------------------------------------
-#   TEST 7: AXI WRITE + PWM (known stall-latency bug)
+#   TEST 8: ADDRESS DECODE: local mem vs peripheral boundary
 # ----------------------------------------------------------
+#   [DRIVER] ADDRESS DECODE: local mem vs peripheral boundary  |  run_cycles=15  |  regs_to_check=2  |  mem_to_check=1
+#   [MONITOR] AXI WRITE + PWM (known stall-latency bug)  |  run_cycles=200  |  regs_to_check=2  |  mem_to_check=0
 #   [CHECKER] Verifying: AXI WRITE + PWM (known stall-latency bug)
 #     [PASS] x9 = 0x40000000
 #     [PASS] x10 = 0x00000064
-# 
-# ----------------------------------------------------------
-#   TEST 8: ADDRESS DECODE: local mem vs peripheral boundary
-# ----------------------------------------------------------
+#   [MONITOR] ADDRESS DECODE: local mem vs peripheral boundary  |  run_cycles=15  |  regs_to_check=2  |  mem_to_check=1
 #   [CHECKER] Verifying: ADDRESS DECODE: local mem vs peripheral boundary
 #     [PASS] x1 = 0x0000007b
 #     [PASS] x3 = 0x0000007b
@@ -177,7 +199,7 @@
 # ==========================================================
 #   >>> ALL TESTS PASSED <<<
 # ==========================================================
-# ** Note: $finish    : tb_soc_layered.sv(463)
-#    Time: 3245 ns  Iteration: 0  Instance: /tb_top
-# End time: 14:58:12 on Sep 18,2026, Elapsed time: 0:00:02
-# Errors: 0, Warnings: 53
+# ** Note: $finish    : top_tb.sv(95)
+#    Time: 3245 ns  Iteration: 0  Instance: /top_tb
+# End time: 23:34:50 on Sep 23,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 52
