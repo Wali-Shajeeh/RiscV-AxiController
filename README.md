@@ -2,11 +2,12 @@
 
 [![ISA](https://img.shields.io/badge/ISA-RISC--V%20RV32I-blue.svg)](https://riscv.org/)
 [![Bus Protocol](https://img.shields.io/badge/Bus-AXI4--Lite-orange.svg)](https://developer.arm.com/documentation/ihi0022/e/)
-[![Verification](https://img.shields.io/badge/Verification-Layered%20SystemVerilog-green.svg)](verification/)
+[![Verification](https://img.shields.io/badge/Verification-Layered%20SystemVerilog%20(58%20Passed)-green.svg)](verification/)
 [![Synthesis](https://img.shields.io/badge/Synthesis-Cadence%20Genus%20(100%20MHz)-blueviolet.svg)](Physical%20Design/)
 [![Formal Verification](https://img.shields.io/badge/LEC-Cadence%20Conformal-brightgreen.svg)](Physical%20Design/)
+[![FPGA](https://img.shields.io/badge/FPGA-Intel%20Cyclone%20V-0071C5.svg)](verification/)
 
-A complete, silicon-ready System-on-Chip (SoC) design based on the **32-bit RISC-V (RV32I)** architecture. The system integrates an RV32I processor core with a memory-mapped **AXI4-Lite interconnect subsystem**, a hardware **Pulse-Width Modulation (PWM) peripheral**, an industry-grade **layered SystemVerilog verification environment**, and **ASIC physical design synthesis & formal equivalence verification results** (Cadence Genus + Conformal LEC).
+A complete, silicon-ready System-on-Chip (SoC) design based on the **32-bit RISC-V (RV32I)** architecture. The system integrates an RV32I processor core with a memory-mapped **AXI4-Lite interconnect subsystem**, a full set of hardware peripherals (**PWM**, **Timer**, **GPIO**, **UART**), an industry-standard **modular layered SystemVerilog verification suite** (11 directed test cases with 58/58 passing assertions), **QuestaSim GUI/CLI project integration**, **Intel Quartus Prime synthesis**, and **ASIC physical design synthesis & formal equivalence verification results** (Cadence Genus + Conformal LEC).
 
 ---
 
@@ -15,24 +16,33 @@ A complete, silicon-ready System-on-Chip (SoC) design based on the **32-bit RISC
 1. [Architecture Overview](#architecture-overview)
 2. [Key Features](#key-features)
 3. [Memory Map & Register Definition](#memory-map--register-definition)
+   - [System Memory Map](#system-memory-map)
+   - [PWM Peripheral Registers](#1-pwm-peripheral-base-0x4000_0000)
+   - [Timer Peripheral Registers](#2-timer-peripheral-base-0x4001_0000)
+   - [GPIO Peripheral Registers](#3-gpio-peripheral-base-0x4002_0000)
+   - [UART Controller Registers](#4-uart-controller-base-0x4003_0000)
 4. [Hardware Implementation Details](#hardware-implementation-details)
-   - [Multicycle FSM Controller](#multicycle-fsm-controller)
-   - [AXI4-Lite Master Adapter](#axi4-lite-master-adapter)
+   - [Integrated SoC Top (`updated_top_module2`)](#integrated-soc-top-updated_top_module2)
+   - [AXI4-Lite Master Adapter with Single-Cycle Stall Latching](#axi4-lite-master-adapter-with-single-cycle-stall-latching)
    - [AXI4-Lite Interconnect / Crossbar](#axi4-lite-interconnect--crossbar)
-   - [PWM Peripheral](#pwm-peripheral)
+   - [Peripheral Modules (PWM, Timer, GPIO, UART)](#peripheral-modules)
+   - [Multicycle RV32I Microarchitecture](#multicycle-rv32i-microarchitecture)
 5. [Directory Structure](#directory-structure)
 6. [Design Verification (DV)](#design-verification-dv)
-   - [Layered Testbench Architecture](#layered-testbench-architecture)
-   - [Test Suites & Coverage](#test-suites--coverage)
-   - [Single-Cycle vs. Multicycle AXI Stalling Finding](#single-cycle-vs-multicycle-axi-stalling-finding)
+   - [Modular Layered Testbench Architecture](#modular-layered-testbench-architecture)
+   - [Test Suites & Coverage Matrix](#test-suites--coverage-matrix)
+   - [Race-Free Driver-Monitor Handshake](#race-free-driver-monitor-handshake)
+   - [Standalone Unit Testbenches](#standalone-unit-testbenches)
 7. [Physical Design & ASIC Synthesis](#physical-design--asic-synthesis)
    - [Synthesis Constraints](#synthesis-constraints)
    - [Quality of Results (QoR) Summary](#quality-of-results-qor-summary)
    - [Logic Equivalence Checking (LEC)](#logic-equivalence-checking-lec)
 8. [Getting Started & Simulation](#getting-started--simulation)
    - [Prerequisites](#prerequisites)
-   - [Running Multicycle SoC Simulation](#running-multicycle-soc-simulation)
-   - [Running the Layered Verification Suite](#running-the-layered-verification-suite)
+   - [Manual QuestaSim GUI Execution](#1-manual-questasim-gui-execution)
+   - [One-Click Batch Simulation Scripts](#2-one-click-batch-simulation-scripts)
+   - [Intel Quartus Prime Synthesis](#3-intel-quartus-prime-fpga-synthesis)
+9. [Authors & Contributors](#authors--contributors)
 
 ---
 
@@ -40,184 +50,175 @@ A complete, silicon-ready System-on-Chip (SoC) design based on the **32-bit RISC
 
 ```
                           +-------------------------------------------------------------+
-                          |                 RISC-V RV32I MULTICYCLE CORE                |
-                          |                                                             |
-+------------------+      |  +----------+       +---------------+       +------------+  |
-| Instruction SRAM | <----+--|  PC Reg  | ----> | IR / Saved PC | ----> |  FSM Ctrl  |  |
-|    (4 KB Local)  |         +----------+       +---------------+       +-----+------+  |
-+------------------+                                                          |         |
-                                                                              |         |
-                          |  +----------+       +---------------+             |         |
-                          |  | Reg File | ----> |  A / B Regs   |             |         |
-                          |  +----------+       +-------+-------+             |         |
-                          |                             |                     |         |
-                          |  +----------+               v                     |         |
-                          |  | Imm Gen  | ------> [ ALU Muxes ]               |         |
-                          |  +----------+               |                     |         |
-                          |                             v                     |         |
-                          |  +----------+       +---------------+             |         |
-                          |  | Writeback| <---- |   ALU & Out   |             |         |
-                          |  |   Mux    |       +-------+-------+             |         |
-                          +-----------------------------|---------------------|---------+
-                                                        | Address / Data      | mem_ready /
-                                                        v                     | read_data
-                          +---------------------------------------------------v---------+
+                          |                   RISC-V RV32I PROCESSOR CORE               |
+                          |            (Single-Cycle with Synchronous Stall /           |
+                          |             Multicycle FSM Execution Controller)            |
+                          +-----------------------------+-------------------------------+
+                                                        |
+                                                        | Address / Write Data / Mem Control
+                                                        v
+                          +-------------------------------------------------------------+
                           |                      MEMORY ARBITRATION                     |
-                          |   - Local Access (< 0x4000_0000): Local Data SRAM           |
+                          |   - Local Access (< 0x4000_0000): Local Data Memory (SRAM)  |
                           |   - Peripheral Access (>= 0x4000_0000): AXI4-Lite Adapter   |
-                          +-----------------+-------------------------------------------+
-                                            |
-                   +------------------------+------------------------+
-                   | (Address < 0x4000_0000)                         | (Address >= 0x4000_0000)
-                   v                                                 v
-        +----------------------+                         +----------------------+
-        |      Data SRAM       |                         |  AXI4-Lite Adapter   |
-        |    (4 KB Local)      |                         |       (Master)       |
-        +----------------------+                         +-----------+----------+
-                                                                     |
-                                                                     | AXI4-Lite Channels
-                                                                     | (AW, W, B, AR, R)
-                                                                     v
-                                                         +----------------------+
-                                                         | AXI4-Lite Interconnect
-                                                         |  (Address Decoder)   |
-                                                         +---+----+----+----+---+
-                                                             |    |    |    |
-                  +------------------------------------------+    |    |    +-----------------------------+
-                  | (0x4000_xxxx)                                 |    |                                  | (0x4003_xxxx)
-                  v                                               v    v                                  v
-        +-------------------+                            +----------------+ +----------------+ +-------------------+
-        |  PWM Peripheral   |                            | Timer (0x4001) | | GPIO (0x4002)  | |  UART Peripheral  |
-        | (Period/Duty/Ctrl)|                            |                | |                | |                   |
-        +---------+---------+                            +----------------+ +----------------+ +-------------------+
-                  |
-                  v pwm_out
+                          +-----------------------------+-------------------------------+
+                                                        |
+                         +------------------------------+------------------------------+
+                         | (Address < 0x4000_0000)                                     | (Address >= 0x4000_0000)
+                         v                                                             v
+              +----------------------+                                     +----------------------+
+              |      Data SRAM       |                                     |  AXI4-Lite Adapter   |
+              |    (Local Memory)    |                                     |    (Master Bridge)   |
+              +----------------------+                                     +-----------+----------+
+                                                                                       |
+                                                                                       | AXI4-Lite Channels
+                                                                                       | (AW, W, B, AR, R)
+                                                                                       v
+                                                                           +----------------------+
+                                                                           | AXI4-Lite Crossbar   |
+                                                                           | (Address Dec/Mux)    |
+                                                                           +---+----+----+----+---+
+                                                                               |    |    |    |
+                   +-----------------------------------------------------------+    |    |    +-----------------------------+
+                   | (0x4000_xxxx)                                                  |    |                                  | (0x4003_xxxx)
+                   v                                                                |    |                                  v
+         +-------------------+                                                      |    |                        +-------------------+
+         |  PWM Peripheral   |                                                      |    |                        |  UART Peripheral  |
+         | (Period/Duty/Ctrl)|                                                      |    |                        | (TX, RX, Regs)    |
+         +---------+---------+                                                      |    |                        +----+---------+----+
+                   |                                                                |    |                             |         |
+                   v pwm_out                                                        v    v                             v uart_tx ^ uart_rx
+                                                                           +----------------+ +----------------+
+                                                                           | Timer (0x4001) | | GPIO (0x4002)  |
+                                                                           | Compare/Count  | | (DIR, OUT, IN) |
+                                                                           +-------+--------+ +---+--------+---+
+                                                                                   |              |        |
+                                                                                   v              v        ^
+                                                                             timer_overflow    gpio_out  gpio_in
 ```
 
 ---
 
 ## Key Features
 
-- **RV32I Instruction Set Support**: Complete implementation of RV32I base user-level integer instructions:
+- **RV32I Base Integer Instruction Set**:
   - **R-Type**: `add`, `sub`, `sll`, `slt`, `sltu`, `xor`, `srl`, `sra`, `or`, `and`
   - **I-Type ALU**: `addi`, `slti`, `sltiu`, `xori`, `ori`, `andi`, `slli`, `srli`, `srai`
   - **Memory Operations**: `lb`, `lh`, `lw`, `lbu`, `lhu`, `sb`, `sh`, `sw` with byte-alignment masking
   - **Control Flow**: `beq`, `bne`, `blt`, `bge`, `bltu`, `bgeu`, `jal`, `jalr`
   - **Upper Immediates**: `lui`, `auipc`
-- **Robust Multicycle Microarchitecture**:
-  - Predictable multi-state execution: **FETCH &rarr; DECODE &rarr; EXECUTE &rarr; MEMORY &rarr; WRITEBACK**.
-  - Internal pipeline registers: `IR` (Instruction Register), `pc_saved`, `A` & `B` operand registers, `ALUOut`, and `MDR` (Memory Data Register).
-  - Explicit wait-state stalling on memory/bus transactions using `mem_ready`.
-- **AXI4-Lite Bus Infrastructure**:
-  - Single master to multi-slave interconnect implementing standard 5-channel AXI4-Lite handshake: Write Address (`AW`), Write Data (`W`), Write Response (`B`), Read Address (`AR`), Read Data (`R`).
-  - Strict boundary isolation between internal scratchpad memory (`< 0x4000_0000`) and peripheral I/O space (`>= 0x4000_0000`).
-- **Programmable PWM Subsystem**:
-  - Independent 32-bit hardware period and duty-cycle counters.
-  - Glitch-free active-high output generation with programmable enable.
-- **ASIC Proven Flow**:
-  - Synthesized with **Cadence Genus** at 100 MHz clock frequency with zero setup/hold timing violations.
-  - Formally verified through **Cadence Conformal LEC** proving 100% equivalence between RTL and gate-level netlist.
+- **Comprehensive AXI4-Lite Peripheral Subsystem**:
+  - **PWM Peripheral** (`0x4000_0000`): 32-bit hardware period and duty-cycle control, active-high toggle output.
+  - **Timer Peripheral** (`0x4001_0000`): 32-bit free-running counter, programmable compare register, single-cycle `timer_overflow` interrupt/pulse.
+  - **GPIO Peripheral** (`0x4002_0000`): 32-bit configurable direction (`DIR`), output register (`OUT`), and external input synchronizer (`IN`) with per-bit masking.
+  - **UART Controller** (`0x4003_0000`): Standard 8N1 serial protocol with parameterizable baud rate, status polling (`TX_STATUS`, `RX_STATUS`), 2-FF synchronizer on `uart_rx`, and mid-bit sampling.
+- **Robust Bus Interconnect & Master Bridge**:
+  - Full 5-channel AXI4-Lite implementation (`AW`, `W`, `B`, `AR`, `R`).
+  - Single-cycle core compatibility: Latched address, write data, and request registers prevent bus dropouts during processor stalls; zero-latency bypass for read data writeback.
+- **Industry-Standard Verification Suite**:
+  - Complete SystemVerilog modular layered testbench (`Generator`, `Driver`, `Monitor`, `Scoreboard`, `Environment`, `Transaction`, `Interface`).
+  - 11 directed test scenarios with 58/58 passing assertions verifying processor datapath, branch/jump redirection, memory isolation, and full AXI write/read operations across all 4 peripherals.
+  - Dedicated unit testbenches for GPIO (21 assertions passed) and UART (17 assertions passed).
+- **Toolchain & ASIC Readiness**:
+  - **QuestaSim Project (`riscv_soc.mpf`)**: Preconfigured project with 1-click GUI and waveform launchers.
+  - **Intel Quartus Prime**: Synthesizable for Intel Cyclone V FPGA with 0 errors.
+  - **Cadence Genus & Conformal LEC**: 100 MHz timing closure with zero violations and 100% formal equivalence.
 
 ---
 
 ## Memory Map & Register Definition
 
-The system address space is partitioned into local memory (low address range) and memory-mapped peripheral I/O (high address range):
+The 32-bit memory address space is strictly partitioned between local memories and memory-mapped AXI4-Lite peripherals:
 
 ### System Memory Map
 
 | Address Range | Size | Region Description | Target Subsystem |
 | :--- | :--- | :--- | :--- |
-| `0x0000_0000 - 0x0000_0FFF` | 4 KB | Instruction Memory (SRAM) | Local Instruction Memory (`instr_mem`) |
+| `0x0000_0000 - 0x0000_0FFF` | 4 KB | Instruction Memory (ROM/SRAM) | Local Instruction Memory (`instr_mem`) |
 | `0x0000_1000 - 0x3FFF_FFFF` | ~1 GB | Data Scratchpad & Local RAM | Local Data Memory (`data_mem`) |
-| `0x4000_0000 - 0x4000_FFFF` | 64 KB | PWM Peripheral Registers | AXI4-Lite Interconnect &rarr; `pwm_peripheral` |
+| `0x4000_0000 - 0x4000_FFFF` | 64 KB | PWM Peripheral Space | AXI4-Lite Interconnect &rarr; `pwm_peripheral` |
 | `0x4001_0000 - 0x4001_FFFF` | 64 KB | Timer Peripheral Space | AXI4-Lite Interconnect &rarr; `timer_peripheral` |
-| `0x4002_0000 - 0x4002_FFFF` | 64 KB | General Purpose I/O (GPIO) | AXI4-Lite Interconnect &rarr; `gpio_peripheral` |
+| `0x4002_0000 - 0x4002_FFFF` | 64 KB | GPIO Peripheral Space | AXI4-Lite Interconnect &rarr; `gpio_peripheral` |
 | `0x4003_0000 - 0x4003_FFFF` | 64 KB | UART Controller Space | AXI4-Lite Interconnect &rarr; `uart_peripheral` |
 
-### PWM Peripheral Registers (`Base: 0x4000_0000`)
+---
+
+### 1. PWM Peripheral (`Base: 0x4000_0000`)
 
 | Offset | Name | Type | Reset | Description |
 | :---: | :---: | :---: | :---: | :--- |
-| `0x00` | **`CONTROL_REG`** | R/W | `0x0000_0000` | Bit `[0]`: PWM Enable (`1` = Run, `0` = Stop/Reset counter). Bits `[31:1]`: Reserved. |
-| `0x04` | **`PERIOD_REG`**  | R/W | `0x0000_0000` | 32-bit total PWM cycle duration in clock periods ($T_{PWM} = \text{PERIOD} \times T_{clk}$). |
+| `0x00` | **`CONTROL_REG`** | R/W | `0x0000_0000` | Bit `[0]`: Enable (`1` = Run, `0` = Stop counter). Bits `[31:1]`: Reserved. |
+| `0x04` | **`PERIOD_REG`**  | R/W | `0x0000_0000` | 32-bit total PWM cycle length in clock ticks ($T_{PWM} = \text{PERIOD} \times T_{clk}$). |
 | `0x08` | **`DUTY_REG`**    | R/W | `0x0000_0000` | 32-bit threshold for high output duration ($T_{HIGH} = \text{DUTY} \times T_{clk}$). |
 
-#### Example Assembly Configuration Sequence:
-```assembly
-# Configure PWM: Period = 100 cycles, Duty = 25 cycles (25% Duty Cycle), Enable = 1
-lui  x9, 0x40000        # x9  = 0x4000_0000 (Base Address)
-addi x10, x0, 100       # x10 = 100
-sw   x10, 4(x9)         # Write PERIOD_REG (0x4000_0004) = 100
-addi x11, x0, 25        # x11 = 25
-sw   x11, 8(x9)         # Write DUTY_REG   (0x4000_0008) = 25
-addi x12, x0, 1         # x12 = 1 (Enable bit)
-sw   x12, 0(x9)         # Write CONTROL_REG(0x4000_0000) = 1 (Start PWM)
-```
+---
+
+### 2. Timer Peripheral (`Base: 0x4001_0000`)
+
+| Offset | Name | Type | Reset | Description |
+| :---: | :---: | :---: | :---: | :--- |
+| `0x00` | **`CONTROL_REG`** | R/W | `0x0000_0000` | Bit `[0]`: Timer Start/Enable. Bit `[1]`: Counter Clear/Reset. Bits `[31:2]`: Reserved. |
+| `0x04` | **`COUNTER_REG`** | R   | `0x0000_0000` | Current 32-bit counter value. Increments every clock cycle while enabled. |
+| `0x08` | **`COMPARE_REG`** | R/W | `0x0000_0000` | 32-bit threshold. When `COUNTER == COMPARE`, pulses `timer_overflow` for 1 cycle. |
+
+---
+
+### 3. GPIO Peripheral (`Base: 0x4002_0000`)
+
+| Offset | Name | Type | Reset | Description |
+| :---: | :---: | :---: | :---: | :--- |
+| `0x00` | **`DIR_REG`**     | R/W | `0x0000_0000` | Direction mask for 32 pins: `1` = Output, `0` = Input. |
+| `0x04` | **`OUT_REG`**     | R/W | `0x0000_0000` | Output values. Only bits with `DIR[i] == 1` drive `gpio_out[i]`. |
+| `0x08` | **`IN_REG`**      | R   | `0x0000_0000` | Synchronized external inputs sampled from `gpio_in[31:0]`. |
+
+---
+
+### 4. UART Controller (`Base: 0x4003_0000`)
+
+| Offset | Name | Type | Reset | Description |
+| :---: | :---: | :---: | :---: | :--- |
+| `0x00` | **`TX_DATA_REG`**   | W   | `0x0000_0000` | Bits `[7:0]`: Data byte to transmit. Writing initiates 8N1 serial transmission. |
+| `0x04` | **`TX_STATUS_REG`** | R   | `0x0000_0000` | Bit `[0]`: `1` = TX Busy (transmission in progress), `0` = Ready for next byte. |
+| `0x08` | **`RX_DATA_REG`**   | R   | `0x0000_0000` | Bits `[7:0]`: Most recently received serial data byte. |
+| `0x0C` | **`RX_STATUS_REG`** | R   | `0x0000_0000` | Bit `[0]`: `1` = RX Data Valid (new byte received), `0` = No new data. |
 
 ---
 
 ## Hardware Implementation Details
 
-### Multicycle FSM Controller
-The core replaces the single-cycle combinational data loop with a synchronized 5-state Mealy/Moore controller (`controller_fsm.sv`):
+### Integrated SoC Top (`updated_top_module2`)
+The unified system top entity (`verification/updated_top_module2.sv`) coordinates all on-chip modules:
+- Instantiates the single-cycle RV32I processor core with PC control and memory adapters.
+- Instantiates the `axi_adapter` master bridge.
+- Instantiates the 1-Master to 4-Slave `axi_interconnect` crossbar.
+- Instantiates `pwm_peripheral`, `timer_peripheral`, `gpio_peripheral`, and `uart_peripheral`.
+- Exposes top-level I/O ports: `clk`, `reset`, `pwm_out`, `timer_overflow`, `gpio_out[31:0]`, `gpio_in[31:0]`, `uart_tx`, and `uart_rx`.
 
-```
-          +-----------+
-          |  S_FETCH  | (ir_write=1, pc_write=1, pc_src=PC+4)
-          +-----+-----+
-                |
-                v
-          +-----------+
-          |  S_DECODE | (A<=rs1, B<=rs2, decode opcode/funct)
-          +-----+-----+
-                |
-         +------+--------------------+--------------------+
-         |                           |                    |
-         v (R/I-Type)                v (Load/Store)       v (Branch / Jump)
-   +-----------+               +-----------+        +-----------+
-   | S_EXECUTE |               | S_EXECUTE |        | S_EXECUTE | (Branch / JAL / JALR:
-   +-----+-----+               | (Address) |        |           |  Evaluate & update PC)
-         |                     +-----+-----+        +-----+-----+
-         |                           |                    |
-         |                           v                    +---> [ Finish & Return to FETCH ]
-         |                     +-----------+
-         |                     | S_MEMORY  | <----+ (Wait for mem_ready)
-         |                     +-----+-----+ -----+
-         |                           |
-         |             +-------------+-------------+
-         |             | (Load)                    | (Store)
-         |             v                           v
-         |       +-------------+             +---> [ Finish & Return to FETCH ]
-         |       | S_WRITEBACK |
-         |       +-------+-----+
-         |               |
-         v               v
-   +---------------------------+
-   |        S_WRITEBACK        | (reg_write=1, reg_write_src=ALUOut or MDR)
-   +-------------+-------------+
-                 |
-                 +---> [ Return to FETCH ]
-```
-
-- **Wait-State Awareness**: When accessing slow bus peripherals or AXI slaves, the FSM stalls in `S_MEMORY` until `mem_ready == 1'b1`.
-
-### AXI4-Lite Master Adapter
-Located in `multicycle/axi_adapter.sv`, this module interfaces the CPU memory stage to AXI4-Lite slaves:
-- **Write FSM**: `IDLE` &rarr; `WRITE_ADDR` (`awvalid`) &rarr; `WRITE_DATA` (`wvalid`, `wstrb=4'hF`) &rarr; `WRITE_RESP` (`bready`) &rarr; `IDLE`.
-- **Read FSM**: `IDLE` &rarr; `READ_ADDR` (`arvalid`) &rarr; `READ_DATA` (`rready`) &rarr; `IDLE`.
-- **Stall Logic**: Deasserts `mem_ready` during outstanding transactions, keeping the processor FSM paused until the final handshake (`bvalid` or `rvalid`).
+### AXI4-Lite Master Adapter with Single-Cycle Stall Latching
+In a single-cycle core, stall propagation must be carefully balanced to prevent premature instruction retirement during multi-cycle AXI handshakes:
+1. **Immediate Busy Assertion**: `busy = ((state != IDLE) || write_req || read_req) && !done`. The core stalls on the very cycle the memory stage accesses an address `>= 0x4000_0000`.
+2. **Synchronous Request Latching**: Internal registers (`latched_addr`, `latched_data`, `active_write_req`, `active_read_req`) hold bus signals steady across all AXI wait states even if the core datapath fluctuates.
+3. **Zero-Latency Read Data Bypass**: During read transactions, `rdata` is bypassed directly from `axi_rdata` when `axi_rvalid && axi_rready`, guaranteeing the processor register file latches the correct peripheral readback value on the retirement clock edge.
 
 ### AXI4-Lite Interconnect / Crossbar
-Located in `multicycle/axi_interconnect.sv`:
-- Decodes address bits `addr[31:16]` to route channel signals to the appropriate slave device.
-- Multiplexes read data and response handshakes back to the master adapter.
+Located in `verification/axi_interconnect.sv`:
+- Decodes address bits `[19:16]` to route transactions to one of four slaves:
+  - `0x0`: Slave 0 &rarr; PWM
+  - `0x1`: Slave 1 &rarr; Timer
+  - `0x2`: Slave 2 &rarr; GPIO
+  - `0x3`: Slave 3 &rarr; UART
+- Multiplexes read data (`rdata`), response handshakes (`bvalid`, `rvalid`), and ready signals back to the master adapter.
 
-### PWM Peripheral
-Located in `multicycle/pwm_peripheral.sv`:
-- Implements AXI4-Lite slave write and read state machines.
-- Features a 32-bit free-running counter that resets when `counter >= period_reg`.
-- Output signal: `pwm_out = (control_reg[0]) && (counter < duty_reg)`.
+### Peripheral Modules
+- **`pwm_peripheral.sv`**: Digital counter with programmable period and duty compare logic.
+- **`timer_peripheral.sv`**: Continuous timer counter with comparator for scheduled interrupts.
+- **`gpio_peripheral.sv`**: Tristate-aware I/O registers with input synchronization flip-flops.
+- **`uart_peripheral.sv`**: Full-duplex asynchronous serial transceiver with configurable clock prescaler (`CLKS_PER_BIT`).
+
+### Multicycle RV32I Microarchitecture
+Located in `multicycle/`:
+- Multi-state execution FSM: **FETCH &rarr; DECODE &rarr; EXECUTE &rarr; MEMORY &rarr; WRITEBACK**.
+- Features explicit `mem_ready` handshaking that holds instruction execution during slow memory or peripheral access.
 
 ---
 
@@ -225,119 +226,147 @@ Located in `multicycle/pwm_peripheral.sv`:
 
 ```
 RiscV-AxiController/
-├── multicycle/                        # Multicycle RV32I Processor & SoC RTL
-│   ├── riscv_soc_mc.sv                # Top-level Multicycle SoC module
+├── .gitignore                         # Build and simulation artifact exclusion rules
+├── README.md                          # Repository Top-Level Documentation
+│
+├── verification/                      # Unified Quartus & QuestaSim Verification Environment
+│   ├── README.md                      # Detailed verification guide and execution notes
+│   ├── single_cycle_core.qpf          # Intel Quartus Prime Project File
+│   ├── single_cycle_core.qsf          # Quartus Project Settings (Cyclone V FPGA)
+│   ├── riscv_soc.mpf                  # QuestaSim Project File (GUI & CLI)
+│   ├── create_project.tcl             # QuestaSim Project Recreation / Tcl Build Script
+│   │
+│   ├── [RTL Modules]
+│   │   ├── updated_top_module2.sv     # SoC Top-Level Entity (Core + AXI + 4 Peripherals)
+│   │   ├── riscv_core.sv              # RV32I Core Datapath & Wiring
+│   │   ├── alu.sv / alu_control.sv    # 32-bit ALU & Control Decoder
+│   │   ├── imm_gen.sv                 # RV32I Immediate Generator
+│   │   ├── reg_file.sv                # 32 x 32-bit Register File
+│   │   ├── pc_reg.sv / pc_control.sv  # Program Counter & Flow Control
+│   │   ├── decoder.sv                 # Main RV32I Instruction Decoder
+│   │   ├── instr_mem.sv / data_mem.sv # Local Instruction & Data SRAM Subsystems
+│   │   ├── axi_adapter.sv             # AXI4-Lite Master Bridge (with stall latching)
+│   │   ├── axi_interconnect.sv        # 1-Master to 4-Slave Crossbar Interconnect
+│   │   ├── pwm_peripheral.sv          # AXI4-Lite PWM Subsystem
+│   │   ├── timer_peripheral.sv        # AXI4-Lite Timer Subsystem
+│   │   ├── gpio_peripheral.sv         # AXI4-Lite GPIO Subsystem
+│   │   ├── uart_tx.sv / uart_rx.sv    # UART Serial Transmitter & Receiver
+│   │   ├── uart_regs.sv               # UART AXI4-Lite Register Block
+│   │   └── uart_peripheral.sv         # Top UART Peripheral Wrapper
+│   │
+│   ├── [Layered Verification Testbench]
+│   │   ├── soc_intf.sv                # SystemVerilog SoC Interface
+│   │   ├── transaction.sv             # Verification Transaction Object
+│   │   ├── generator.sv               # 11 Directed Test Cases Generator
+│   │   ├── driver.sv                  # Reset & Stimulus Driver with Memory Loader
+│   │   ├── monitor.sv                 # Register, Memory, & Signal Observer
+│   │   ├── scoreboard.sv              # Reference Model & Assertion Checker
+│   │   ├── environment.sv             # Component Wiring & Mailbox Orchestrator
+│   │   └── top_tb.sv                  # Testbench Top Module & Clock Generator
+│   │
+│   ├── [Unit Testbenches]
+│   │   ├── tb_gpio.sv                 # Standalone GPIO Unit Testbench (21 Assertions)
+│   │   └── tb_uart.sv                 # Standalone UART Unit Testbench (17 Assertions)
+│   │
+│   └── [1-Click Execution Scripts]
+│       ├── open_questa_gui.bat        # Opens QuestaSim GUI with riscv_soc.mpf loaded
+│       ├── run_questa_gui_wave.bat    # Launches QuestaSim GUI with waveforms loaded
+│       ├── run_questa_soc_modular.bat # One-click CLI simulation (58/58 Passed)
+│       ├── run_questa_gpio.bat        # Runs standalone GPIO verification (21/21 Passed)
+│       └── run_questa_uart.bat        # Runs standalone UART verification (17/17 Passed)
+│
+├── multicycle/                        # Multicycle RV32I Processor Subsystem
+│   ├── riscv_soc_mc.sv                # Multicycle SoC Top Module
 │   ├── controller_fsm.sv              # 5-stage FSM Controller
-│   ├── alu.sv                         # Arithmetic Logic Unit
-│   ├── alu_control.sv                 # ALU Operation Decoder
-│   ├── imm_gen.sv                     # Immediate Generator
-│   ├── reg_file.sv                    # 32 x 32-bit Register File
-│   ├── pc_reg.sv                      # Program Counter with write enable
-│   ├── instr_mem.sv                   # Instruction Memory (4 KB)
-│   ├── data_mem.sv                    # Data Memory with byte/half/word support
-│   ├── axi_adapter.sv                 # AXI4-Lite Master Adapter
-│   ├── axi_interconnect.sv            # AXI4-Lite Interconnect / Decoder
-│   ├── pwm_peripheral.sv              # Memory-mapped PWM Peripheral
-│   ├── hex_file.hex                   # Default test program for PWM
-│   ├── tb_riscv_core_mc.sv            # Standalone Core Testbench
-│   ├── tb_riscv_soc_mc.sv             # Multicycle SoC + PWM Testbench
-│   ├── compile.bat                    # ModelSim compilation script
-│   ├── run_sim.bat                    # Simulation run script with VCD export
-│   └── riscv_soc_mc.qpf / .qsf        # Intel Quartus Prime project files
+│   ├── compile.bat / run_sim.bat      # ModelSim simulation scripts
+│   └── riscv_soc_mc.qpf / .qsf        # Quartus Prime project files
 │
-├── Physical Design/                   # ASIC Implementation & Synthesis
-│   ├── constraints.sdc                # SDC Timing & I/O Constraints (100 MHz)
-│   ├── genus.cmd / genus.log          # Cadence Genus execution logs
-│   ├── capstone.do / capstone_lec.log # Cadence Conformal LEC formal verification
-│   ├── report_qor.rpt                 # Quality of Results (QoR) summary
-│   ├── report_timing.rpt              # Static Timing Analysis (STA) report
-│   ├── report_area.rpt                # Cell count and area breakdown
-│   ├── report_power.rpt               # Dynamic & leakage power report
-│   └── unmapped.rpt                   # Netlist mapping inspection report
-│
-├── verification/                      # Layered Verification Suite (DV)
-│   ├── README.md                      # Detailed verification testbench guide
-│   ├── tb_soc_layered.sv              # Top Layered Testbench for SoC
-│   ├── tb_single_cycle_core_layered.sv# Layered Testbench for standalone Core
-│   ├── tb_multicycle_soc.sv           # Multicycle SoC test wrapper
-│   ├── tb_multicycle_core.sv          # Multicycle Core test wrapper
-│   ├── run_questa_soc.bat             # QuestaSim runner for SoC testbench
-│   ├── run_questa_single_cycle_core.bat
-│   ├── run_questa_multicycle_soc.bat
-│   ├── run_modelsim_soc.bat           # ModelSim runner for SoC testbench
-│   ├── hex_file.hex                   # Default verification hex
-│   ├── instructions_test.hex          # 22-instruction RV32I validation sequence
-│   └── pwm_test.hex                   # Memory-mapped AXI PWM test hex
-│
-└── README.md                          # Repository Top-Level Documentation
+└── Physical Design/                   # ASIC Implementation & Synthesis (Cadence Genus + LEC)
+    ├── constraints.sdc                # SDC Timing Constraints (100 MHz)
+    ├── genus.cmd / genus.log          # Cadence Genus execution logs
+    ├── capstone.do / capstone_lec.log # Cadence Conformal LEC formal verification
+    ├── report_qor.rpt                 # Quality of Results (QoR) summary
+    ├── report_timing.rpt              # Static Timing Analysis report
+    └── report_area.rpt / power.rpt    # Area & power breakdown reports
 ```
 
 ---
 
 ## Design Verification (DV)
 
-### Layered Testbench Architecture
+### Modular Layered Testbench Architecture
 
-The verification suite in `verification/tb_soc_layered.sv` is constructed using an object-oriented, layered verification methodology:
+The verification suite in `verification/` follows the standard object-oriented SystemVerilog layered architecture:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                              tb_top                                    │
-│  - 100 MHz Clock Generator (10 ns period) & Power-on Reset             │
+│                              top_tb                                    │
+│  - 100 MHz Clock Generator (10 ns period) & Power-on Reset Logic       │
+│  - DUT: updated_top_module2                                            │
 │  - Background AXI4-Lite Protocol & Handshake Monitor                   │
 │                                                                        │
 │   ┌────────────────────────────────────────────────────────────────┐   │
 │   │                      riscv_transaction                         │   │
-│   │   Program hex stream, execution cycle budget, expected         │   │
-│   │   register file state, expected data memory state, flags       │   │
+│   │   Stimulus program bytes, cycle budgets, expected architectural│   │
+│   │   registers, memory contents, GPIO in/out, and timer pulses    │   │
 │   └────────────────────────────────┬───────────────────────────────┘   │
-│                                    v                                   │
+│                                    v (gen2drv mailbox)                 │
 │   ┌────────────────────────────────────────────────────────────────┐   │
 │   │                       riscv_generator                          │   │
-│   │   Constructs directed & constrained transactions covering      │   │
-│   │   ISA instructions, boundary cases, and bus transactions       │   │
+│   │   Generates 11 directed tests covering core instructions,      │   │
+│   │   peripheral AXI writes, and peripheral AXI readbacks          │   │
 │   └────────────────────────────────┬───────────────────────────────┘   │
 │                                    v                                   │
 │   ┌────────────────────────────────────────────────────────────────┐   │
-│   │                         Driver (drive)                         │   │
-│   │   Backdoor memory loading, hardware reset pulsing, run-control │   │
+│   │                         driver                                 │   │
+│   │   Backdoor memory initialization, hardware reset pulsing,      │   │
+│   │   GPIO input driving, and clock stepping                       │   │
+│   └───────────────┬────────────────────────────────┬───────────────┘   │
+│                   │ (drv2mon mailbox)              ^                   │
+│                   v                                │ (mon2drv done)    │
+│   ┌────────────────────────────────────────────────┴───────────────┐   │
+│   │                         monitor                                │   │
+│   │   Samples register file x1..x31, local SRAM, and PWM/GPIO state│   │
 │   └────────────────────────────────┬───────────────────────────────┘   │
-│                                    v                                   │
+│                                    v (mon2scb mailbox)                 │
 │   ┌────────────────────────────────────────────────────────────────┐   │
-│   │                        Checker (check)                         │   │
-│   │   Compares architectural registers (x1-x31) & SRAM against ref │   │
-│   └────────────────────────────────┬───────────────────────────────┘   │
-│                                    v                                   │
-│   ┌────────────────────────────────────────────────────────────────┐   │
-│   │                           Scoreboard                           │   │
-│   │   Aggregates transaction pass/fail verdicts and reports logs   │   │
+│   │                        scoreboard                              │   │
+│   │   Compares sampled DUT results against golden reference values;│   │
+│   │   tracks total pass/fail assertions and produces summary report│   │
 │   └────────────────────────────────────────────────────────────────┘   │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Test Suites & Coverage
+### Test Suites & Coverage Matrix
 
-| Suite | Test Objective | Covered Scenarios |
-| :---: | :--- | :--- |
-| **TEST 1** | **Reset Verification** | Confirms registers `x1..x31` reset strictly to `0x0000_0000` with `x0` constant. |
-| **TEST 2** | **R-Type ALU** | `add`, `sub`, `and`, `or`, `xor`, `slt`, signed/unsigned arithmetic edge cases. |
-| **TEST 3** | **I-Type ALU** | Immediate sign extension for `addi`, `andi`, `ori`, `xori`, `slti`, `slli`, `srli`. |
-| **TEST 4** | **Load & Store** | `sw`, `lw`, `sh`, `lh`, `sb`, `lb` with memory data integrity and alignment. |
-| **TEST 5** | **Branch Resolution** | `beq`, `bne`, `blt`, `bge` taken vs. not-taken branch conditions and PC redirect. |
-| **TEST 6** | **Unconditional Jumps**| `jal` and `jalr` target address calculation and link register storage (`PC + 4`). |
-| **TEST 7** | **AXI Handshake & Write** | Verified AXI master handshake on address space `>= 0x4000_0000`. |
-| **TEST 8** | **Address Decode Boundary** | Confirms memory accesses below `0x4000_0000` never leak into peripheral bus. |
+| Test ID | Test Objective | Stimulus / Operations | Checked Registers / Assertions | Verdict |
+| :---: | :--- | :--- | :--- | :---: |
+| **TEST 1** | **Reset Verification** | Power-on reset sequence | `x1..x5, x10, x15, x31 == 0` | **PASS** |
+| **TEST 2** | **R-Type ALU** | `add`, `sub`, `and`, `or`, `xor`, `slt` | `x1..x8` ALU results | **PASS** |
+| **TEST 3** | **I-Type ALU** | `addi`, `andi`, `ori`, `xori`, `slti`, `slli`, `srli` | `x1..x7` immediate results | **PASS** |
+| **TEST 4** | **Load & Store** | `sw` & `lw` through local data memory | `x1..x3`, `mem[0]` integrity | **PASS** |
+| **TEST 5** | **Branch Taken** | `beq` skips instruction forward | `x1, x3, x4` PC redirect check | **PASS** |
+| **TEST 6** | **Unconditional Jump** | `jal` target leap and link register save | `x1, x2, x3, x5 (PC+4)` | **PASS** |
+| **TEST 7** | **AXI PWM Write & Read** | Write Period=100, Duty=25, Enable=1; Readback | `x6..x12`, PWM toggling | **PASS** |
+| **TEST 8** | **Address Decode Boundary**| Local SRAM write vs. peripheral space isolation | `x1, x3, mem[0] == 123` | **PASS** |
+| **TEST 9** | **AXI Timer Write & Read**| Write Compare=10, Enable=1; Readback | `x5, x6, x13..x15`, Timer pulse | **PASS** |
+| **TEST 10**| **AXI GPIO Write & Read** | Write DIR=0xFF, OUT=0x55; Read IN=0xA5A55A5A | `x16..x19`, `gpio_out` check | **PASS** |
+| **TEST 11**| **AXI UART Write & Read** | Write TX_DATA='Z' (0x5A); Read TX_STATUS | `x20, x21 == 0x5A` | **PASS** |
 
-### Single-Cycle vs. Multicycle AXI Stalling Finding
-During verification, a critical architectural difference was identified:
-1. **Single-Cycle Core Defect**: When an AXI peripheral write occurs, the AXI adapter asserts `busy = 1`. However, in a pure single-cycle core without intermediate stage registers, the PC register updates on the very next clock edge before the stall signal can propagate. This causes the PC to advance prematurely, changing `alu_result` and causing the bus request to drop mid-handshake.
-2. **Multicycle Resolution**: In `riscv_soc_mc`, the multicycle FSM enters `S_MEMORY` and holds all controls (`ALUOut`, write data `B`, and address) stable until `mem_ready == 1'b1`. This guarantees full compliance with AXI4-Lite handshake timing rules.
+**Total Scoreboard Assertions: 58 PASSED, 0 FAILED (100% Pass Rate).**
+
+### Race-Free Driver-Monitor Handshake
+The modular layered testbench incorporates a bidirectional mailbox handshake (`drv2mon` and `mon2drv`). The driver runs the clock cycles for test $N$, passes the transaction to the monitor, and blocks until the monitor finishes sampling all architectural registers and memory locations. This prevents next-test memory clears or resets from altering state prematurely.
+
+### Standalone Unit Testbenches
+- **`tb_gpio.sv`**: Tests direction masking, output driving, input synchronization, and AXI write/read handshakes (**21 PASSED, 0 FAILED**).
+- **`tb_uart.sv`**: Tests 8N1 frame format, start/stop bit validation, baud clock divider, AXI status flags, and full loopback transmission (**17 PASSED, 0 FAILED**).
 
 ---
 
 ## Physical Design & ASIC Synthesis
 
-The design was synthesized using **Cadence Genus(TM) Synthesis Solution** targeting a standard cell ASIC library.
+Targeted at a 100 MHz standard cell library using **Cadence Genus Synthesis Solution** and **Cadence Conformal LEC**.
 
 ### Synthesis Constraints (`constraints.sdc`)
 ```tcl
@@ -355,103 +384,76 @@ set_output_delay -max 1.0 [get_ports "timer_overflow"] -clock [get_clocks "clk"]
 
 | Parameter | Result | Notes |
 | :--- | :--- | :--- |
-| **Synthesis Tool** | Cadence Genus 26.10-p002_1 | Built on Rocky Linux 9.8 |
-| **Target Clock Frequency** | **100.0 MHz** ($T_{clk} = 10.0\text{ ns}$) | Real-time embedded clock |
+| **Synthesis Tool** | Cadence Genus 26.10-p002_1 | Rocky Linux 9.8 |
+| **Target Clock Frequency** | **100.0 MHz** ($T_{clk} = 10.0\text{ ns}$) | Real-time system clock |
 | **Worst Setup Slack** | **+1130.6 ps** (+1.13 ns) | **MET** (Zero timing violations) |
-| **Total Negative Slack (TNS)** | **0.0 ps** | All paths satisfied |
-| **Total Cell Area** | **$4675.14\ \mu\text{m}^2$** | Gate-level cell footprint |
-| **Total Cell Count** | **1,852** instances | 287 Sequential, 1565 Combinational |
-| **Total Power Consumption** | **$90.68\ \mu\text{W}$** | @ $0.9\text{V}$, $125^\circ\text{C}$ (PVT worst-case) |
-| - *Internal Power* | $80.19\ \mu\text{W}$ (88.4%) | Standard cell internal switching |
-| - *Switching Power* | $10.39\ \mu\text{W}$ (11.5%) | Interconnect net switching |
-| - *Leakage Power* | $0.097\ \mu\text{W}$ (0.11%) | Static leakage |
-
-### Area Breakdown by Module
-
-```
-+-------------------------------------------------------------------------------+
-| Module Instance         | Submodule Type       | Cell Count | Cell Area (um^2)|
-+-------------------------+----------------------+------------+-----------------+
-| u_pwm_peripheral        | pwm_peripheral       |        446 |        1229.490 |
-| u_timer_peripheral      | timer_peripheral     |        320 |         879.624 |
-| u_reg_file              | reg_file             |        184 |         795.492 |
-| u_pc_reg                | pc_reg               |         58 |         198.360 |
-| u_instr_mem             | instr_mem            |         41 |          49.248 |
-| u_axi_adapter           | axi_adapter          |         15 |          29.754 |
-| u_axi_interconnect      | axi_interconnect     |         16 |          28.386 |
-| u_control_unit          | decoder              |         11 |          14.022 |
-| u_data_mem              | data_mem             |          3 |           6.840 |
-| u_alu_control           | alu_control          |          5 |           5.814 |
-| (Top glue & datapath)   | updated_top_module2  |        768 |        1447.910 |
-+-------------------------+----------------------+------------+-----------------+
-| TOTAL                   |                      |      1,852 |        4675.140 |
-+-------------------------------------------------------------------------------+
-```
+| **Total Negative Slack (TNS)** | **0.0 ps** | All timing paths met |
+| **Total Cell Area** | **$4675.14\ \mu\text{m}^2$** | Standard cell gate footprint |
+| **Total Cell Count** | **1,852** instances | 287 Sequential, 1,565 Combinational |
+| **Total Power Consumption** | **$90.68\ \mu\text{W}$** | @ $0.9\text{V}$, $125^\circ\text{C}$ (Worst-case PVT) |
 
 ### Logic Equivalence Checking (LEC)
 Using **Cadence Conformal(R) LEC** (`Physical Design/capstone.do`):
-- **Golden Model**: SystemVerilog RTL (`multicycle/*.sv`).
-- **Revised Model**: Synthesized gate-level netlist (`updated_top_module2_netlist.v`).
-- **Result**: **100% Compare Points Passed** with zero non-equivalences, zero aborts, and zero unmapped points.
+- **Golden Model**: SystemVerilog RTL.
+- **Revised Model**: Synthesized gate-level netlist.
+- **Result**: **100% Compare Points Passed** with zero non-equivalences and zero unmapped points.
 
 ---
 
 ## Getting Started & Simulation
 
 ### Prerequisites
-- **EDA Simulator**: QuestaSim / ModelSim (e.g. Questa 2024.1 or Intel ModelSim Starter Edition).
-- **Synthesis (Optional)**: Cadence Genus Synthesis Solution & Conformal LEC.
-- **FPGA Tooling (Optional)**: Intel Quartus Prime Lite / Standard Edition.
+- **EDA Simulator**: QuestaSim / ModelSim (e.g. QuestaSim 2024.1).
+- **FPGA Tooling**: Intel Quartus Prime Lite / Standard Edition 20.1+.
+- **ASIC Tools (Optional)**: Cadence Genus & Conformal LEC.
 
 ---
 
-### Running Multicycle SoC Simulation
+### 1. Manual QuestaSim GUI Execution
 
-To run the multicycle SoC testbench (which executes RISC-V instructions configuring the PWM peripheral over AXI4-Lite):
-
-#### Via Windows Command Prompt:
-```cmd
-cd multicycle
-compile.bat
-run_sim.bat
-```
-
-#### Via QuestaSim / ModelSim GUI / CLI:
-```bash
-cd multicycle
-vlib work
-vlog -sv alu.sv alu_control.sv imm_gen.sv reg_file.sv pc_reg.sv instr_mem.sv data_mem.sv controller_fsm.sv axi_adapter.sv axi_interconnect.sv pwm_peripheral.sv riscv_soc_mc.sv tb_riscv_soc_mc.sv
-vsim -c -do "vcd file wave.vcd; vcd add -r /tb_riscv_soc_mc/*; run -all; quit -f" work.tb_riscv_soc_mc
-```
+1. Double-click **`verification/open_questa_gui.bat`** (or open QuestaSim &rarr; **File** &rarr; **Open** &rarr; **Project...** &rarr; choose `verification/riscv_soc.mpf`).
+2. All 23 source files and testbenches will load with green checkmarks.
+3. To run simulation:
+   - Select **Simulate &rarr; Start Simulation...**
+   - Expand library **`work`** and select **`top_tb`**.
+   - In transcript, type:
+     ```tcl
+     add wave -r /*
+     run -all
+     ```
+   - All 58 assertions will pass and waveforms will populate in the Wave window.
 
 ---
 
-### Running the Layered Verification Suite
+### 2. One-Click Batch Simulation Scripts
 
-To run the automated verification suite covering the complete RV32I ISA and AXI interconnect:
+From Command Prompt or PowerShell inside `verification/`:
 
-#### Using QuestaSim:
-```cmd
-cd verification
-run_questa_soc.bat
-```
+- **Modular SoC Layered Testbench (58 Tests)**:
+  ```cmd
+  run_questa_soc_modular.bat
+  ```
+- **SoC Layered Testbench with Waveform GUI**:
+  ```cmd
+  run_questa_gui_wave.bat
+  ```
+- **Standalone GPIO Unit Verification (21 Tests)**:
+  ```cmd
+  run_questa_gpio.bat
+  ```
+- **Standalone UART Unit Verification (17 Tests)**:
+  ```cmd
+  run_questa_uart.bat
+  ```
 
-Or for the multicycle SoC:
-```cmd
-run_questa_multicycle_soc.bat
-```
+---
 
-#### Using ModelSim:
-```cmd
-cd verification
-run_modelsim_soc.bat
-```
+### 3. Intel Quartus Prime FPGA Synthesis
 
-#### Inspecting Waveforms:
-Open the generated `vsim.wlf` or `wave.vcd` in your waveform viewer:
-```cmd
-vsim -view vsim.wlf
-```
+1. Open Intel Quartus Prime.
+2. Select **File &rarr; Open Project...** and choose `verification/single_cycle_core.qpf`.
+3. Press **Ctrl + L** (or click **Processing &rarr; Start Compilation**).
+4. The project synthesizes cleanly targeting the Intel Cyclone V FPGA with 0 errors.
 
 ---
 
