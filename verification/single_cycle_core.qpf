@@ -1,0 +1,6 @@
+QUARTUS_VERSION = "20.1"
+DATE = "12:30:00  September 24, 2026"
+
+# Revisions
+
+PROJECT_REVISION = "single_cycle_core"

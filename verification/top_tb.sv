@@ -42,9 +42,14 @@ module top_tb;
     //  DUT: updated_top_module2 (single-cycle RISC-V SoC + AXI + PWM)
     // ---------------------------------------------------------------
     updated_top_module2 dut (
-        .clk     (clk),
-        .reset   (intf.reset),
-        .pwm_out (intf.pwm_out)
+        .clk      (clk),
+        .reset    (intf.reset),
+        .pwm_out  (intf.pwm_out),
+        .uart_tx  (intf.uart_tx),
+        .uart_rx  (intf.uart_rx),
+        .gpio_out        (intf.gpio_out),
+        .gpio_in         (intf.gpio_in),
+        .timer_overflow  (intf.timer_overflow)
     );
 
     // ---------------------------------------------------------------
@@ -73,6 +78,8 @@ module top_tb;
     environment env;
 
     initial begin
+        intf.uart_rx    = 1'b1;
+        intf.gpio_in    = 32'b0;
         axi_write_count = 0;
         axi_read_count  = 0;
 

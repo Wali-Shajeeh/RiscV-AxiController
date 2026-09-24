@@ -14,5 +14,10 @@ interface soc_intf (input logic clk);
     // ---------------------------------------------------------------
     logic        reset;
     logic        pwm_out;
+    logic        uart_tx;
+    logic        uart_rx;
+    logic [31:0] gpio_out;
+    logic [31:0] gpio_in;
+    logic        timer_overflow;
 
 endinterface

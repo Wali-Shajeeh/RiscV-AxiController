@@ -33,6 +33,8 @@ class scoreboard;
             check_registers(tr);
             check_memory(tr);
             check_pwm(tr);
+            check_gpio(tr);
+            check_timer(tr);
         end
     endtask
 
@@ -82,6 +84,37 @@ class scoreboard;
                 total_pass++;
             end else begin
                 $display("    [FAIL] PWM did NOT toggle");
+                total_fail++;
+            end
+        end
+    endfunction
+
+    // ---------------------------------------------------------------
+    //  GPIO output check
+    // ---------------------------------------------------------------
+    function void check_gpio (riscv_transaction tr);
+        if (tr.check_gpio_out) begin
+            if (tr.actual_gpio_out === tr.exp_gpio_out) begin
+                $display("    [PASS] gpio_out = 0x%08h", tr.actual_gpio_out);
+                total_pass++;
+            end else begin
+                $display("    [FAIL] gpio_out = 0x%08h, expected 0x%08h",
+                         tr.actual_gpio_out, tr.exp_gpio_out);
+                total_fail++;
+            end
+        end
+    endfunction
+
+    // ---------------------------------------------------------------
+    //  Timer overflow check
+    // ---------------------------------------------------------------
+    function void check_timer (riscv_transaction tr);
+        if (tr.check_timer_overflow) begin
+            if (tr.actual_timer_overflow) begin
+                $display("    [PASS] Timer overflow pulse detected");
+                total_pass++;
+            end else begin
+                $display("    [FAIL] Timer overflow NOT detected");
                 total_fail++;
             end
         end

@@ -13,14 +13,16 @@ class monitor;
     virtual soc_intf vif;
     mailbox          drv2mon;
     mailbox          mon2scb;
+    mailbox          mon2drv;
 
     // ---------------------------------------------------------------
     //  Constructor
     // ---------------------------------------------------------------
-    function new (virtual soc_intf vif, mailbox drv2mon, mailbox mon2scb);
+    function new (virtual soc_intf vif, mailbox drv2mon, mailbox mon2scb, mailbox mon2drv);
         this.vif     = vif;
         this.drv2mon = drv2mon;
         this.mon2scb = mon2scb;
+        this.mon2drv = mon2drv;
     endfunction
 
     // ---------------------------------------------------------------
@@ -48,8 +50,8 @@ class monitor;
                 tr.actual_mem_vals[j] = top_tb.dut.u_data_mem.mem[tr.check_mem_addrs[j]];
             end
 
-            // --- Check PWM toggling ---
-            if (tr.check_pwm) begin
+            // --- Check PWM toggling (fallback if not already detected during run_cycles) ---
+            if (tr.check_pwm && !tr.actual_pwm_toggled) begin
                 bit saw_high, saw_low;
                 saw_high = 0;
                 saw_low  = 0;
@@ -66,6 +68,9 @@ class monitor;
 
             // --- Forward to Scoreboard ---
             mon2scb.put(tr);
+
+            // --- Signal Driver that sampling is done ---
+            mon2drv.put(1);
         end
     endtask
 

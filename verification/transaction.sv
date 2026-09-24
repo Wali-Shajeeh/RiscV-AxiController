@@ -20,6 +20,10 @@ class riscv_transaction;
     logic [31:0] check_mem_vals  [];   // expected data-memory values
     bit          check_pwm;            // should we check PWM toggling?
     int          pwm_wait_cycles;      // extra cycles to wait for PWM edges
+    logic [31:0] set_gpio_in;
+    bit          check_gpio_out;
+    logic [31:0] exp_gpio_out;
+    bit          check_timer_overflow;
 
     // ---------------------------------------------------------------
     //  Observed fields  (populated by Monitor)
@@ -27,6 +31,8 @@ class riscv_transaction;
     logic [31:0] actual_reg [0:31];
     logic [31:0] actual_mem_vals [];
     bit          actual_pwm_toggled;
+    logic [31:0] actual_gpio_out;
+    bit          actual_timer_overflow;
 
     // ---------------------------------------------------------------
     //  Display helper

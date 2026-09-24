@@ -30,6 +30,7 @@ class environment;
     mailbox gen2drv;
     mailbox drv2mon;
     mailbox mon2scb;
+    mailbox mon2drv;
 
     // ---------------------------------------------------------------
     //  Virtual interface handle
@@ -45,10 +46,11 @@ class environment;
         gen2drv = new();
         drv2mon = new();
         mon2scb = new();
+        mon2drv = new();
 
         gen = new(gen2drv);
-        drv = new(vif, gen2drv, drv2mon);
-        mon = new(vif, drv2mon, mon2scb);
+        drv = new(vif, gen2drv, drv2mon, mon2drv);
+        mon = new(vif, drv2mon, mon2scb, mon2drv);
         scb = new(mon2scb);
     endfunction
 

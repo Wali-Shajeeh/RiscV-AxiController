@@ -1,0 +1,16 @@
+# Quartus temporary directories
+**/db/
+**/incremental_db/
+**/output_files/
+
+# QuestaSim / ModelSim simulation artifacts
+**/work/
+**/*.wlf
+**/transcript
+**/*.cr.mti
+
+# Quartus workspace layout files
+**/*.qws
+
+# Temporary restored archive folder
+single_cycle_core_Mufeez_restored/

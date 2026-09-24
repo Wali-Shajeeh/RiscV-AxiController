@@ -14,14 +14,16 @@ class driver;
     virtual soc_intf vif;
     mailbox          gen2drv;
     mailbox          drv2mon;
+    mailbox          mon2drv;
 
     // ---------------------------------------------------------------
     //  Constructor
     // ---------------------------------------------------------------
-    function new (virtual soc_intf vif, mailbox gen2drv, mailbox drv2mon);
+    function new (virtual soc_intf vif, mailbox gen2drv, mailbox drv2mon, mailbox mon2drv);
         this.vif     = vif;
         this.gen2drv = gen2drv;
         this.drv2mon = drv2mon;
+        this.mon2drv = mon2drv;
     endfunction
 
     // ---------------------------------------------------------------
@@ -38,6 +40,7 @@ class driver;
     // ---------------------------------------------------------------
     task run (int num_tests);
         riscv_transaction tr;
+        int               done_tok;
 
         for (int i = 0; i < num_tests; i++) begin
             gen2drv.get(tr);
@@ -49,7 +52,8 @@ class driver;
             tr.display("DRIVER");
 
             // --- Assert reset ---
-            vif.reset = 1;
+            vif.reset   = 1;
+            vif.gpio_in = tr.set_gpio_in;
             @(posedge vif.clk);
             @(posedge vif.clk);
 
@@ -69,11 +73,26 @@ class driver;
             @(posedge vif.clk);
             vif.reset = 0;
 
-            // --- Run for specified cycles ---
-            repeat (tr.run_cycles) @(posedge vif.clk);
+            // --- Run for specified cycles & sample active signals ---
+            tr.actual_timer_overflow = 0;
+            begin
+                bit saw_pwm_high = 0, saw_pwm_low = 0;
+                repeat (tr.run_cycles) begin
+                    @(posedge vif.clk);
+                    if (vif.timer_overflow) tr.actual_timer_overflow = 1;
+                    if (vif.pwm_out)        saw_pwm_high = 1;
+                    if (!vif.pwm_out)       saw_pwm_low  = 1;
+                end
+                if (tr.check_pwm)
+                    tr.actual_pwm_toggled = (saw_pwm_high && saw_pwm_low);
+            end
+            tr.actual_gpio_out = vif.gpio_out;
 
             // --- Forward transaction to Monitor ---
             drv2mon.put(tr);
+
+            // --- Wait for Monitor to complete sampling before proceeding to next test ---
+            mon2drv.get(done_tok);
         end
     endtask
 

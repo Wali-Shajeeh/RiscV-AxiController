@@ -167,35 +167,39 @@ class riscv_generator;
     endfunction
 
     // ---------------------------------------------------------------
-    //  TEST 7 : AXI Write + PWM toggle  (known stall-latency bug)
+    //  TEST 7 : AXI Write + PWM toggle (Period=100, Duty=25, Enable=1, Readbacks)
     // ---------------------------------------------------------------
     function riscv_transaction gen_test_axi_pwm_write ();
         riscv_transaction t = new();
-        t.test_name  = "AXI WRITE + PWM (known stall-latency bug)";
+        t.test_name  = "AXI WRITE & READ: PWM (Period=100, Duty=25, Enable=1, Readbacks)";
         t.run_cycles = 200;
-        t.check_pwm  = 0;   // PWM won't toggle due to stall bug
+        t.check_pwm  = 1;   // Verify PWM toggling
+        t.pwm_wait_cycles = 150;
 
-        t.program_hex = new[8];
-        t.program_hex[0] = 32'h400004B7;  // lui   x9,  0x40000  -> x9 = 0x40000000
-        t.program_hex[1] = 32'h06400513;  // addi  x10, x0, 100
-        t.program_hex[2] = 32'h00A4A223;  // sw    x10, 4(x9)    -> triggers AXI write
-        t.program_hex[3] = 32'h01900593;  // addi  x11, x0, 25
-        t.program_hex[4] = 32'h00B4A423;  // sw    x11, 8(x9)
-        t.program_hex[5] = 32'h00100613;  // addi  x12, x0, 1
-        t.program_hex[6] = 32'h00C4A023;  // sw    x12, 0(x9)
-        t.program_hex[7] = 32'h0000006F;  // jal   x0, 0
+        t.program_hex = new[11];
+        t.program_hex[0]  = 32'h400004B7;  // lui   x9,  0x40000  -> x9 = 0x40000000
+        t.program_hex[1]  = 32'h06400513;  // addi  x10, x0, 100
+        t.program_hex[2]  = 32'h00A4A223;  // sw    x10, 4(x9)    -> triggers AXI write (period=100)
+        t.program_hex[3]  = 32'h01900593;  // addi  x11, x0, 25
+        t.program_hex[4]  = 32'h00B4A423;  // sw    x11, 8(x9)    -> triggers AXI write (duty=25)
+        t.program_hex[5]  = 32'h00100613;  // addi  x12, x0, 1
+        t.program_hex[6]  = 32'h00C4A023;  // sw    x12, 0(x9)    -> triggers AXI write (control=1)
+        t.program_hex[7]  = 32'h0044A303;  // lw    x6,  4(x9)    -> AXI readback period (100)
+        t.program_hex[8]  = 32'h0084A383;  // lw    x7,  8(x9)    -> AXI readback duty (25)
+        t.program_hex[9]  = 32'h0004A403;  // lw    x8,  0(x9)    -> AXI readback control (1)
+        t.program_hex[10] = 32'h0000006F;  // jal   x0, 0
 
-        // Only verify registers set BEFORE the AXI write (LUI, ADDI)
-        t.check_regs = '{9, 10};
+        t.check_regs = '{6, 7, 8, 9, 10, 11, 12};
+        t.exp_reg[6]  = 100;
+        t.exp_reg[7]  = 25;
+        t.exp_reg[8]  = 1;
         t.exp_reg[9]  = 32'h40000000;
         t.exp_reg[10] = 100;
+        t.exp_reg[11] = 25;
+        t.exp_reg[12] = 1;
 
         t.check_mem_addrs = new[0];
         t.check_mem_vals  = new[0];
-
-        // Report the bug to the console
-        $display("  [NOTE] AXI stall-latency bug: PC advances 1 cycle before busy asserts.");
-        $display("         This causes AXI address to change mid-handshake -> deadlock.");
         return t;
     endfunction
 
@@ -223,6 +227,96 @@ class riscv_generator;
     endfunction
 
     // ---------------------------------------------------------------
+    //  TEST 9: AXI WRITE & READ: TIMER (Compare=10, Enable=1, Readbacks)
+    // ---------------------------------------------------------------
+    function riscv_transaction gen_test_axi_timer ();
+        riscv_transaction t = new();
+        t.test_name  = "AXI WRITE & READ: TIMER (Compare=10, Enable=1, Readbacks)";
+        t.run_cycles = 100;
+        t.check_pwm  = 0;
+        t.set_gpio_in = 32'b0;
+        t.check_gpio_out = 0;
+        t.check_timer_overflow = 1;
+
+        t.program_hex = new[8];
+        t.program_hex[0] = 32'h400106B7;  // lui   x13, 0x40010   → x13 = 0x40010000
+        t.program_hex[1] = 32'h00A00713;  // addi  x14, x0, 10    → compare = 10
+        t.program_hex[2] = 32'h00E6A423;  // sw    x14, 8(x13)    → timer compare = 10
+        t.program_hex[3] = 32'h00100793;  // addi  x15, x0, 1     → control = 1 (enable)
+        t.program_hex[4] = 32'h00F6A023;  // sw    x15, 0(x13)    → timer start
+        t.program_hex[5] = 32'h0086A283;  // lw    x5,  8(x13)    → AXI readback compare (10)
+        t.program_hex[6] = 32'h0006A303;  // lw    x6,  0(x13)    → AXI readback control (1)
+        t.program_hex[7] = 32'h0000006F;  // jal   x0, 0
+
+        t.check_regs = '{5, 6, 13, 14, 15};
+        t.exp_reg[5]  = 10;
+        t.exp_reg[6]  = 1;
+        t.exp_reg[13] = 32'h40010000;
+        t.exp_reg[14] = 10;
+        t.exp_reg[15] = 1;
+        t.check_mem_addrs = new[0]; t.check_mem_vals = new[0];
+        return t;
+    endfunction
+
+    // ---------------------------------------------------------------
+    //  TEST 10: AXI WRITE & READ: GPIO (DIR=0xFF, OUT=0x55, READ IN=0xA5A55A5A)
+    // ---------------------------------------------------------------
+    function riscv_transaction gen_test_axi_gpio ();
+        riscv_transaction t = new();
+        t.test_name  = "AXI WRITE & READ: GPIO (DIR=0xFF, OUT=0x55, READ IN=0xA5A55A5A)";
+        t.run_cycles = 100;
+        t.check_pwm  = 0;
+        t.set_gpio_in = 32'hA5A55A5A;
+        t.check_gpio_out = 1;
+        t.exp_gpio_out = 32'h00000055;
+        t.check_timer_overflow = 0;
+
+        t.program_hex = new[7];
+        t.program_hex[0] = 32'h40020837;  // lui   x16, 0x40020   → x16 = 0x40020000
+        t.program_hex[1] = 32'h0FF00893;  // addi  x17, x0, 255   → DIR = 0xFF
+        t.program_hex[2] = 32'h01182023;  // sw    x17, 0(x16)    → write DIR
+        t.program_hex[3] = 32'h05500913;  // addi  x18, x0, 85    → OUT = 0x55
+        t.program_hex[4] = 32'h01282223;  // sw    x18, 4(x16)    → write OUT
+        t.program_hex[5] = 32'h00882983;  // lw    x19, 8(x16)    → read IN
+        t.program_hex[6] = 32'h0000006F;  // jal   x0, 0
+
+        t.check_regs = '{16, 17, 18, 19};
+        t.exp_reg[16] = 32'h40020000;
+        t.exp_reg[17] = 32'h000000FF;
+        t.exp_reg[18] = 32'h00000055;
+        t.exp_reg[19] = 32'hA5A55A5A;
+        t.check_mem_addrs = new[0]; t.check_mem_vals = new[0];
+        return t;
+    endfunction
+
+    // ---------------------------------------------------------------
+    //  TEST 11: AXI WRITE & READ: UART (TX_DATA='Z', Read TX_STATUS)
+    // ---------------------------------------------------------------
+    function riscv_transaction gen_test_axi_uart ();
+        riscv_transaction t = new();
+        t.test_name  = "AXI WRITE & READ: UART (TX_DATA='Z', Read TX_STATUS)";
+        t.run_cycles = 100;
+        t.check_pwm  = 0;
+        t.set_gpio_in = 32'b0;
+        t.check_gpio_out = 0;
+        t.check_timer_overflow = 0;
+
+        t.program_hex = new[6];
+        t.program_hex[0] = 32'h40030A37;  // lui   x20, 0x40030   → x20 = 0x40030000
+        t.program_hex[1] = 32'h05A00A93;  // addi  x21, x0, 90    → 'Z'
+        t.program_hex[2] = 32'h015A2023;  // sw    x21, 0(x20)    → write TX_DATA
+        t.program_hex[3] = 32'h004A2B03;  // lw    x22, 4(x20)    → read TX_STATUS
+        t.program_hex[4] = 32'h00000013;  // nop
+        t.program_hex[5] = 32'h0000006F;  // jal   x0, 0
+
+        t.check_regs = '{20, 21};
+        t.exp_reg[20] = 32'h40030000;
+        t.exp_reg[21] = 32'h0000005A;
+        t.check_mem_addrs = new[0]; t.check_mem_vals = new[0];
+        return t;
+    endfunction
+
+    // ---------------------------------------------------------------
     //  run() — generate all tests and push into gen2drv mailbox
     // ---------------------------------------------------------------
     task run ();
@@ -236,6 +330,9 @@ class riscv_generator;
         tests_q.push_back(gen_test_jal());
         tests_q.push_back(gen_test_axi_pwm_write());
         tests_q.push_back(gen_test_address_decode());
+        tests_q.push_back(gen_test_axi_timer());
+        tests_q.push_back(gen_test_axi_gpio());
+        tests_q.push_back(gen_test_axi_uart());
 
         total_tests = tests_q.size();
 
