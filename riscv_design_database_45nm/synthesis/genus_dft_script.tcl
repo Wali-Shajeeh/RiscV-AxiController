@@ -8,19 +8,22 @@ set DESIGN "updated_top_module2"
 
 set_db init_lib_search_path ../lib/
 set_db init_hdl_search_path ../rtl/
+
+# Allow black boxes for memory modules (instr_mem, data_mem)
+set_db hdl_error_on_blackbox false
+
 read_libs slow_vdd1v0_basicCells.lib
 
 # Read all synthesizable SystemVerilog RTL files
+# NOTE: instr_mem.sv and data_mem.sv are EXCLUDED (black-boxed for SRAM macro replacement)
 read_hdl -sv {
     alu.sv
     alu_control.sv
     axi_adapter.sv
     axi_interconnect.sv
-    data_mem.sv
     decoder.sv
     gpio_peripheral.sv
     imm_gen.sv
-    instr_mem.sv
     pc_control.sv
     pc_reg.sv
     pwm_peripheral.sv
@@ -35,6 +38,10 @@ read_hdl -sv {
 
 elaborate $DESIGN
 read_sdc ../constraints/constraints_top.sdc
+
+# Mark memory black boxes as dont_touch to prevent optimization
+set_dont_touch [get_cells *u_instr_mem*]
+set_dont_touch [get_cells *u_data_mem*]
 
 # DFT Configuration
 set_db dft_scan_style muxed_scan

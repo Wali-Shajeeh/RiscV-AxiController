@@ -7,6 +7,10 @@ read library ../lib/slow_vdd1v0_basiccells.v -verilog -both
 read design ../rtl/*.sv -sv -golden
 set root module updated_top_module2 -golden
 
+// Declare memory modules as black boxes (they are SRAM macros, not synthesized)
+add black box instr_mem
+add black box data_mem
+
 // Read Revised Netlist
 read design ../synthesis/outputs/updated_top_module2_netlist.v -verilog -revised
 set root module updated_top_module2 -revised
