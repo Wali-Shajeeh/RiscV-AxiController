@@ -3,13 +3,13 @@ set log file riscv_axi_soc_dft_lec.log -replace
 // Read standard cell library
 read library ../lib/slow_vdd1v0_basiccells.v -verilog -both
 
+// Declare memory modules as black boxes BEFORE reading designs
+add black box instr_mem -both
+add black box data_mem -both
+
 // Read Golden RTL
 read design ../rtl/*.sv -sv -golden
 set root module updated_top_module2 -golden
-
-// Declare memory modules as black boxes
-add black box instr_mem
-add black box data_mem
 
 // Read Revised DFT Netlist
 read design ../synthesis/outputs_dft/updated_top_module2_netlist_dft.v -verilog -revised
