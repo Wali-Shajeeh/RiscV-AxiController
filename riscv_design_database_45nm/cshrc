@@ -1,0 +1,27 @@
+# ==============================================================================
+# Cadence Environment Setup Script for RISC-V AXI Controller 45nm Flow
+# Replace <tool_installation> with your server's Cadence installation root path
+# ==============================================================================
+
+echo "Setting up Cadence Tool Environment..."
+
+setenv XLMHOME <tool_installation>/xcelium/2503/25.03.001
+setenv VMGRHOME <tool_installation>/vmanager/2503/25.03.001
+setenv MODHOME <tool_installation>/MODUS251/25.10.000
+setenv CNFRLHOME <tool_installation>/CONFRML251/25.10.100
+setenv DDI_GENUS  <tool_installation>/DDI251/25.10-p002_1/GENUS251
+setenv DDI_INNOVUS  <tool_installation>/DDI251/25.10-p002_1/INNOVUS251
+setenv SSVHOME  <tool_installation>/SSV251/25.10-p001_1
+
+set path = ($XLMHOME/tools/bin \
+            $VMGRHOME/bin \
+            $MODHOME/lnx86/tools.lnx86/bin \
+            $CNFRLHOME/lnx86/tools.lnx86/bin \
+            $DDI_GENUS/tools.lnx86/bin \
+            $DDI_INNOVUS/tools.lnx86/bin \
+            $SSVHOME/lnx86/tools.lnx86/bin \
+            $path)
+
+foreach t (genus lec innovus tempus xrun)
+   echo "Found $t at `which $t`"
+end
